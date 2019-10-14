@@ -10,6 +10,9 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String
+  },
   facebookToken: String,
   googleToken: String,
   twitterToken: String,

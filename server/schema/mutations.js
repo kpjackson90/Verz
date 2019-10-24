@@ -4,11 +4,49 @@ const mongoose = require("mongoose");
 const Post = mongoose.model("post");
 const Comment = mongoose.model("comment");
 const PostType = require("./post_type");
+const UserType = require("./user_type");
 const CommentType = require("./comment_type");
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
+    createUser: {
+      type: UserType,
+      args: {
+        username: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      resolve(parentValue, { username, password }, req) {
+        return AuthService.createUser({ username, password, req });
+      }
+    },
+    login: {
+      type: UserType,
+      args: {
+        username: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      resolve(parentValue, { username, password }, req) {
+        return AuthService.login({ username, password, req });
+      }
+    },
+    verify: {
+      type: UserType,
+      args: {
+        token: { type: GraphQLString }
+      },
+      resolve(parentValue, { token }, req) {
+        return AuthService.verifyToken({ token, req });
+      }
+    },
+    logout: {
+      type: UserType,
+      resolve(parentValue, args, req) {
+        const { user } = req;
+        req.logout();
+        return user;
+      }
+    },
     addPost: {
       type: PostType,
       args: {

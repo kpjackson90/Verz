@@ -7,15 +7,21 @@ import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { Router, Route } from "react-router-dom";
 import history from "./history";
+import requireAuth from "./components/auth/requireAuth";
 import "./styles/style.css";
 
 import App from "./components/App";
 import Discover from "./components/Discover";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
+import Landing from "./components/Landing";
+import Dashboard from "./components/Dashboard";
 
 const httpLink = createHttpLink({
-  uri: "localhost:4000/graphql"
+  uri: "/graphql",
+  opts: {
+    credentials: "same-origin"
+  }
 });
 
 const authMiddleware = setContext((_, { headers }) => {
@@ -38,10 +44,12 @@ const Root = () => {
   return (
     <ApolloProvider client={client}>
       <Router history={history}>
-        <Route exact path="/" component={App}></Route>
-        <Route exact path="/login" component={Login}></Route>
-        <Route exact path="/signup" component={Signup}></Route>
-        <Route exact path="/discover" component={Discover}></Route>
+        <Route path="/" component={App}></Route>
+        <Route path="/login" component={Login}></Route>
+        <Route path="/signup" component={Signup}></Route>
+        <Route path="/discover" component={Discover}></Route>
+        <Route path="/landing" component={Landing}></Route>
+        <Route path="/dashboard" component={requireAuth(Dashboard)}></Route>
       </Router>
     </ApolloProvider>
   );

@@ -5,7 +5,7 @@ class Header extends Component {
   render() {
     return (
       <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
           Verz
           <span class="navbar-text">
             <h6>Lyrical Intent</h6>

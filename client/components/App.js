@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "./partials/Header";
 
-function App() {
+const App = props => {
   return (
-    <div>
+    <div className="container-fluid">
       <Header />
-      <h1>This is the Home page</h1>
+      {props.children}
     </div>
   );
-}
+};
 
 export default App;

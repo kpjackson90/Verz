@@ -6,7 +6,11 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   email: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    lowercase: true,
+    unique: true,
+    match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   },
   password: {
     type: String,
@@ -42,4 +46,4 @@ UserSchema.methods.comparePassword = function comparePassword(
   });
 };
 
-mongoose.model("User", UserSchema);
+mongoose.model("user", UserSchema);

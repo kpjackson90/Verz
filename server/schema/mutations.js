@@ -6,6 +6,7 @@ const Comment = mongoose.model("comment");
 const PostType = require("./post_type");
 const UserType = require("./user_type");
 const CommentType = require("./comment_type");
+const AuthService = require("../services/auth");
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -13,21 +14,21 @@ const mutation = new GraphQLObjectType({
     createUser: {
       type: UserType,
       args: {
-        username: { type: GraphQLString },
+        email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parentValue, { username, password }, req) {
-        return AuthService.createUser({ username, password, req });
+      resolve(parentValue, { email, password }, req) {
+        return AuthService.createUser({ email, password, req });
       }
     },
     login: {
       type: UserType,
       args: {
-        username: { type: GraphQLString },
+        email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parentValue, { username, password }, req) {
-        return AuthService.login({ username, password, req });
+      resolve(parentValue, { email, password }, req) {
+        return AuthService.login({ email, password, req });
       }
     },
     verify: {

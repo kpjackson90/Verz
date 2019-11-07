@@ -4,7 +4,8 @@ const LocalStrategy = require("passport-local").Strategy;
 const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-const { generateToken, setUserInfo } = require("../middleware/helpers.js");
+const { generateToken } = require("../middleware/helpers/generateToken.helper");
+const { setUserInfo } = require("../middleware/helpers/setUserInfo.helper");
 
 const User = mongoose.model("user");
 
@@ -38,9 +39,9 @@ passport.use(
 
 passport.use(
   new LocalStrategy(
-    { usernameField: "username" },
-    (username, password, done) => {
-      User.findOne({ username: username.toLowerCase() }, (err, user) => {
+    { usernameField: "email", passwordField: "password" },
+    (email, password, done) => {
+      User.findOne({ email }, (err, user) => {
         if (err) {
           return done(err);
         }
@@ -61,16 +62,16 @@ passport.use(
   )
 );
 
-async function createUser({ username, password, req }) {
-  const user = new User({ username, password });
+async function createUser({ email, password, req }) {
+  const user = new User({ email, password });
 
-  if (!username || !password) {
-    throw new Error("You must provide a username and password");
+  if (!email || !password) {
+    throw new Error("You must provide an email and password");
   }
-  return User.findOne({ username })
+  return User.findOne({ email })
     .then(existingUser => {
       if (existingUser) {
-        throw new Error("Username in use");
+        throw new Error("Email in use");
       }
       return user.save();
     })
@@ -86,7 +87,7 @@ async function createUser({ username, password, req }) {
 
           resolve({
             id: user.id,
-            username,
+            email,
             token
           });
         });
@@ -94,9 +95,9 @@ async function createUser({ username, password, req }) {
     });
 }
 
-async function login({ username, password }) {
+async function login({ email, password }) {
   return new Promise((resolve, reject) => {
-    User.findOne({ username })
+    User.findOne({ email })
       .then(user => {
         if (!user) {
           return reject("Invalid user");
@@ -114,7 +115,7 @@ async function login({ username, password }) {
         const userInfo = setUserInfo(user);
         const token = generateToken(userInfo);
 
-        resolve({ id: user.id, token, username });
+        resolve({ id: user.id, token, email });
       })
       .catch(error => {
         reject(error);

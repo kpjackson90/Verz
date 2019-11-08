@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("./models");
 const expressGraphQL = require("express-graphql");
+const cors = require("cors");
+const passport = require("passport");
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const schema = require("./schema/schema");
@@ -19,7 +21,9 @@ mongoose.connection
 const app = express();
 
 app.use(bodyParser.json());
-
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cors());
 app.use(
   "/graphql",
   expressGraphQL({

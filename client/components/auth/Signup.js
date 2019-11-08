@@ -12,11 +12,13 @@ class Signup extends Component {
     this.state = { errors: [] };
   }
 
-  componentWillUpdate(nextProps) {
+  /*
+  UNSAFE_componentWillUpdate(nextProps) {
     if (nextProps.data.user && !this.props.data.user) {
-      history.push("/dashboard");
+      history.push("/");
     }
   }
+  */
 
   onSubmit({ email, password }) {
     this.props
@@ -28,6 +30,8 @@ class Signup extends Component {
         const errors = res.graphQLErrors.map(error => error.message);
         this.setState({ errors });
       });
+
+    history.push("/");
   }
 
   render() {

@@ -1,11 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 
-function Login() {
-  return (
-    <div>
-      <h1>This is the Discover Page</h1>
-    </div>
-  );
+class Discover extends Component {
+  render() {
+    return <div>This is the discover page</div>;
+  }
 }
 
-export default Login;
+export default Discover;

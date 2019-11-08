@@ -4,28 +4,32 @@ import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 import { createHttpLink } from "apollo-link-http";
+import { onError } from "apollo-link-error";
+import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
-import { Router, Route } from "react-router-dom";
+import { Router } from "react-router-dom";
 import history from "./history";
 import requireAuth from "./components/auth/requireAuth";
+import { AUTH_TOKEN } from "./constants";
 import "./styles/style.css";
 
 import App from "./components/App";
-import Discover from "./components/Discover";
-import Login from "./components/auth/Login";
-import Signup from "./components/auth/Signup";
-import Landing from "./components/Landing";
-import Dashboard from "./components/Dashboard";
 
-const httpLink = createHttpLink({
-  uri: "/graphql",
-  opts: {
-    credentials: "same-origin"
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log("graphQLErrors", graphQLErrors);
+  }
+  if (networkError) {
+    console.log("networkError", networkError);
   }
 });
 
+const httpLink = createHttpLink({
+  uri: "http://localhost:4000/graphql"
+});
+
 const authMiddleware = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem(AUTH_TOKEN);
 
   return {
     headers: {
@@ -35,23 +39,20 @@ const authMiddleware = setContext((_, { headers }) => {
   };
 });
 
+const link = ApolloLink.from([errorLink, httpLink]);
+
 const client = new ApolloClient({
-  link: authMiddleware.concat(httpLink),
+  link: authMiddleware.concat(link),
   cache: new InMemoryCache()
 });
 
 const Root = () => {
   return (
-    <ApolloProvider client={client}>
-      <Router history={history}>
-        <Route path="/" component={App}></Route>
-        <Route path="/login" component={Login}></Route>
-        <Route path="/signup" component={Signup}></Route>
-        <Route path="/discover" component={Discover}></Route>
-        <Route path="/landing" component={Landing}></Route>
-        <Route path="/dashboard" component={requireAuth(Dashboard)}></Route>
-      </Router>
-    </ApolloProvider>
+    <Router history={history}>
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </Router>
   );
 };
 

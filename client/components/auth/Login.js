@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AuthForm from "./AuthForm";
-import mutation from "../../mutations/Login";
+import LoginMutation from "../../mutations/Login";
 import { graphql } from "react-apollo";
 import query from "../../queries/CurrentUser";
 import history from "../../history";
@@ -12,22 +12,18 @@ class Login extends Component {
     this.state = { errors: [] };
   }
 
-  componentWillUpdate(nextProps) {
-    if (!this.props.data.user && nextProps.data.user) {
-      history.push("/dashboard");
-    }
-  }
-
   onSubmit({ email, password }) {
     this.props
       .mutate({
         variables: { email, password },
+        onCompleted: { data: this._confirm(data) },
         refetchQueries: [{ query }]
       })
       .catch(res => {
         const errors = res.graphQLErrors.map(error => error.message);
         this.setState({ errors });
       });
+    history.push("/");
   }
 
   render() {
@@ -43,6 +39,18 @@ class Login extends Component {
       </div>
     );
   }
+
+  /*
+  _confirm = async data => {
+    const { token } = data.login;
+    this._saveUserData(token);
+  };
+
+  _saveUserData = token => {
+    localStorage.setItem(AUTH_TOKEN, token);
+  };
+}
+*/
 }
 
-export default graphql(query)(graphql(mutation)(Login));
+export default graphql(query)(graphql(LoginMutation)(Login));

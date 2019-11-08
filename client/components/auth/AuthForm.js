@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { AUTH_TOKEN } from "../../constants";
 
 class AuthForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { email: "", password: "" };
+    this.state = { email: "", password: "", login: true };
   }
 
   onSubmit(event) {
@@ -18,7 +19,7 @@ class AuthForm extends Component {
       <div className="container">
         <div className="row">
           <form onSubmit={this.onSubmit.bind(this)}>
-            <div className="input-field col-md-4 offset-md-4 pt-top-10">
+            <div className="input-field  pt-top-10">
               <input
                 className="form-control"
                 placeholder="Email"
@@ -26,7 +27,7 @@ class AuthForm extends Component {
                 onChange={e => this.setState({ email: e.target.value })}
               />
             </div>
-            <div className="input-field col-md-4 offset-md-4 pt-top-10">
+            <div className="input-field  pt-top-10">
               <input
                 placeholder="Password"
                 type="password"
@@ -40,7 +41,7 @@ class AuthForm extends Component {
                 <div key={error}>{error}</div>
               ))}
             </div>
-            <div className="col-md-4 offset-md-4 pt-top-10">
+            <div className="pt-top-10">
               <button className="btn btn-primary btn-sm btn-block">
                 Submit
               </button>

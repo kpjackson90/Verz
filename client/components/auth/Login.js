@@ -1,56 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
 import AuthForm from "./AuthForm";
-import LoginMutation from "../../mutations/Login";
+import LoginUser from "../../mutations/Login";
+import { useApolloClient, useMutation } from "@apollo/react-hooks";
 import { graphql } from "react-apollo";
 import query from "../../queries/CurrentUser";
 import history from "../../history";
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
+export default function Login() {
+  const client = useApolloClient();
+  const [login, { loading, error }] = useMutation(LoginUser, {
+    onCompleted({ login }) {
+      localStorage.setItem("token", login);
+      client.writeDate({ data: { isLoggedIn: true } });
+    }
+  });
 
-    this.state = { errors: [] };
-  }
+  if (loading) return <Loading />;
+  if (error) return <p>An error occured</p>;
 
-  onSubmit({ email, password }) {
-    this.props
-      .mutate({
-        variables: { email, password },
-        onCompleted: { data: this._confirm(data) },
-        refetchQueries: [{ query }]
-      })
-      .catch(res => {
-        const errors = res.graphQLErrors.map(error => error.message);
-        this.setState({ errors });
-      });
-    history.push("/");
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="col-md-6 offset-md-4 pt-top-100">
-          <h4>Login</h4>
-        </div>
-        <AuthForm
-          errors={this.state.errors}
-          onSubmit={this.onSubmit.bind(this)}
-        />
-      </div>
-    );
-  }
-
-  /*
-  _confirm = async data => {
-    const { token } = data.login;
-    this._saveUserData(token);
-  };
-
-  _saveUserData = token => {
-    localStorage.setItem(AUTH_TOKEN, token);
-  };
+  return <AuthForm login={login} />;
 }
-*/
-}
-
-export default graphql(query)(graphql(LoginMutation)(Login));

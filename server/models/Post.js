@@ -40,11 +40,11 @@ PostSchema.statics.snap = function(id) {
 };
 
 PostSchema.statics.addComment = function(id, content) {
-  const Post = mongoose.model("post");
+  const Comment = mongoose.model("comment");
 
   return this.findById(id).then(post => {
-    const comment = new Post({ content, post });
-    post.comment.push(comment);
+    const comment = new Comment({ content, post });
+    post.comments.push(comment);
     return Promise.all([comment.save(), post.save()]).then(
       ([comment, post]) => post
     );

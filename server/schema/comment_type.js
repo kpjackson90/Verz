@@ -21,7 +21,6 @@ const CommentType = new GraphQLObjectType({
         return Comment.findById(parentValue)
           .populate("post")
           .then(comment => {
-            console.log(comment);
             return comment.post;
           });
       }

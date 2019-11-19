@@ -7,6 +7,7 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const schema = require("./schema/schema");
+const path = require("path");
 
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.MONGO_URI, {

@@ -75,11 +75,25 @@ const mutation = new GraphQLObjectType({
         return Post.snap(id);
       }
     },
+    unsnapPost: {
+      type: PostType,
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
+        return Post.unsnap(id);
+      }
+    },
     snapComment: {
       type: CommentType,
       args: { id: { type: GraphQLID } },
       resolve(parentValue, { id }) {
         return Comment.snap(id);
+      }
+    },
+    unsnapComment: {
+      type: CommentType,
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
+        return Comment.unsnap(id);
       }
     },
     deletePost: {

@@ -14,6 +14,7 @@ const CommentType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     snaps: { type: GraphQLInt },
+    unsnaps: { type: GraphQLInt },
     content: { type: GraphQLString },
     post: {
       type: require("./post_type"),

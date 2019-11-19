@@ -2,12 +2,18 @@
   "name": "verz",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "11.12.0",
+    "npm": "6.13.0"
+  },
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js --ignore client",
     "clean": "rimraf build",
     "build": "npm run clean && webpack",
-    "serve": "webpack-dev-server"
+    "serve": "webpack-dev-server --port $PORT --host 0.0.0.0",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
   "author": "Kareem Phillip-Jackson",
   "license": "ISC",

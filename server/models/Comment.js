@@ -13,6 +13,10 @@ const CommentSchema = new Schema({
   snaps: {
     type: Number,
     default: 0
+  },
+  unsnaps: {
+    type: Number,
+    default: 0
   }
 });
 
@@ -21,6 +25,15 @@ CommentSchema.statics.snap = function(id) {
 
   return Comment.findById(id).then(comment => {
     ++comment.snaps;
+    return comment.save();
+  });
+};
+
+CommentSchema.statics.unsnap = function(id) {
+  const Comment = mongoose.model("comment");
+
+  return Comment.findById(id).then(comment => {
+    ++comment.unsnaps;
     return comment.save();
   });
 };

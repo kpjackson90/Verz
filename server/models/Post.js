@@ -18,6 +18,10 @@ const PostSchema = new Schema({
     type: Number,
     default: 0
   },
+  unsnaps: {
+    type: Number,
+    default: 0
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "user"
@@ -35,6 +39,15 @@ PostSchema.statics.snap = function(id) {
 
   return Post.findById(id).then(post => {
     ++post.snaps;
+    return post.save();
+  });
+};
+
+PostSchema.statics.unsnap = function(id) {
+  const Post = mongoose.model("post");
+
+  return Post.findById(id).then(post => {
+    ++post.unsnaps;
     return post.save();
   });
 };

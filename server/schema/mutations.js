@@ -3,6 +3,7 @@ const { GraphQLObjectType, GraphQLString, GraphQLID } = graphql;
 const mongoose = require("mongoose");
 const Post = mongoose.model("post");
 const Comment = mongoose.model("comment");
+const User = mongoose.model("user");
 const PostType = require("./post_type");
 const UserType = require("./user_type");
 const CommentType = require("./comment_type");
@@ -66,6 +67,31 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { content, postId }) {
         return Post.addComment(postId, content);
+      }
+    },
+    followUser: {
+      type: UserType,
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
+        return User.follow(id);
+      }
+    },
+    addUserInfo: {
+      type: UserType,
+      args: {
+        username: { type: GraphQLString },
+        bio: { type: GraphQLString },
+        location: { type: GraphQLString }
+      },
+      resolve(parentValue, { username, bio, location }) {
+        return new User({ username, bio, location }).save();
+      }
+    }, //do edit/update profile
+    deleteUser: {
+      type: UserType,
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
+        return User.remove({ _id: id });
       }
     },
     snapPost: {

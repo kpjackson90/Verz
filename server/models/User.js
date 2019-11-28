@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt-nodejs");
-const crypto = require("crypto");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -15,7 +14,32 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  userImage: {
+    type: String
+  },
+  bio: {
+    type: String
+  },
+  location: {
+    type: String
+  },
+  followers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "user"
+    }
+  ],
+  following: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "user"
+    }
+  ]
 });
 
 UserSchema.pre("save", function save(next) {
@@ -44,6 +68,20 @@ UserSchema.methods.comparePassword = function comparePassword(
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     cb(err, isMatch);
   });
+};
+
+UserSchema.statics.follow = function(id) {
+  if (this.following.indexOf(id) === -1) {
+    this.following.push(id);
+  } else {
+    this.following.splice(this.following.indexOf(id), 1);
+  }
+};
+
+UserSchema.statics.findFollowers = function(id) {
+  return this.findById(id)
+    .populate("followers")
+    .then(user => user.followers);
 };
 
 mongoose.model("user", UserSchema);

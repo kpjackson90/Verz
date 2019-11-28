@@ -7,13 +7,17 @@
     "npm": "6.13.0"
   },
   "main": "index.js",
+  "jest": {
+    "setupTestFrameworkScriptFile": "./tests/setup.js"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js --ignore client",
     "clean": "rimraf build",
     "build": "npm run clean && webpack",
     "serve": "webpack-dev-server --port $PORT --host 0.0.0.0",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
+    "test": "jest"
   },
   "author": "Kareem Phillip-Jackson",
   "license": "ISC",
@@ -40,12 +44,15 @@
     "graphql-tag": "^2.10.1",
     "html-webpack-plugin": "^2.26.0",
     "image-webpack-loader": "^6.0.0",
+    "jest": "^24.9.0",
     "jsonwebtoken": "^8.5.1",
+    "migrate-mongoose": "^4.0.0",
     "mongoose": "^5.7.5",
     "nodemon": "^1.19.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "puppeteer": "^2.0.0",
     "react": "^16.11.0",
     "react-apollo": "^3.1.3",
     "react-dom": "^16.11.0",

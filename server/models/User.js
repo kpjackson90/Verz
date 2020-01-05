@@ -16,8 +16,7 @@ const UserSchema = new Schema({
     required: true
   },
   username: {
-    type: String,
-    required: true
+    type: String
   },
   userImage: {
     type: String
@@ -25,6 +24,15 @@ const UserSchema = new Schema({
   bio: {
     type: String
   },
+  image: {
+    type: String
+  },
+  favorites: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Article"
+    }
+  ],
   location: {
     type: String
   },
@@ -70,18 +78,4 @@ UserSchema.methods.comparePassword = function comparePassword(
   });
 };
 
-UserSchema.statics.follow = function(id) {
-  if (this.following.indexOf(id) === -1) {
-    this.following.push(id);
-  } else {
-    this.following.splice(this.following.indexOf(id), 1);
-  }
-};
-
-UserSchema.statics.findFollowers = function(id) {
-  return this.findById(id)
-    .populate("followers")
-    .then(user => user.followers);
-};
-
-mongoose.model("user", UserSchema);
+UserSchema.statics.favorite = function(id) {};

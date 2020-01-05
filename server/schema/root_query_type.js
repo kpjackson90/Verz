@@ -27,14 +27,18 @@ const RootQuery = new GraphQLObjectType({
     comment: {
       type: CommentType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve(parnetValue, { id }) {
+      resolve(parentValue, { id }) {
         return Comment.findById(id);
       }
     },
     user: {
       type: UserType,
-      resolve(parentValue, args, req) {
-        return req.user;
+      resolve(parentValue, args, { user }) {
+        if (!user) {
+          throw new Error("You are not authenticated!");
+        } else {
+          return User.findById(user._id);
+        }
       }
     }
   })

@@ -2,10 +2,12 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const passportJWT = require("passport-jwt");
+const jwt = require("jsonwebtoken");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 const { generateToken } = require("../middleware/helpers/generateToken.helper");
 const { setUserInfo } = require("../middleware/helpers/setUserInfo.helper");
+const keys = require("../config/keys");
 
 const User = mongoose.model("user");
 
@@ -23,7 +25,7 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: "randomJWTstringwasinsertedherefortesting"
+      secretOrKey: keys.JWT_SECRET
     },
     function(jwtPayload, cb) {
       return User.findOne({ _id: jwtPayload._id })
@@ -125,8 +127,8 @@ async function login({ email, password }) {
 
 async function verifyToken({ token }) {
   try {
-    const decoded = jwt.verify(token, "insertsecrethere");
-    const user = await User.findOne({ _id: decoded.id });
+    const decoded = jwt.verify(token, keys.JWT_SECRET);
+    const user = await User.findOne({ _id: decoded._id });
     return { ...user._doc, password: null };
   } catch (err) {
     throw err;

@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const schema = require("./schema/schema");
 const path = require("path");
+const { auth } = require("./middleware/isAuth");
 
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.MONGO_URI, {
@@ -27,10 +28,14 @@ app.use(passport.session());
 app.use(cors());
 app.use(
   "/graphql",
-  expressGraphQL({
+  auth,
+  expressGraphQL(req => ({
     schema,
-    graphiql: true
-  })
+    graphiql: true,
+    context: {
+      user: req.user
+    }
+  }))
 );
 
 if (process.env.NODE_ENV !== "production") {

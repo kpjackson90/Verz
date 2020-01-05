@@ -1,41 +1,68 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const PostSchema = new Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  body: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String
-  },
-  date: {
-    type: Date,
-    default: Date.now()
-  },
-  snaps: {
-    type: Number,
-    default: 0
-  },
-  unsnaps: {
-    type: Number,
-    default: 0
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "user"
-  },
-  comments: [
-    {
+//Review these
+// var uniqueValidator = require('mongoose-unique-validator');
+// var slug = require('slug');
+
+const PostSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true
+    },
+    slug: {
+      type: String,
+      lowercase: true,
+      unique: true
+    },
+    description: {
+      type: String
+    },
+    body: {
+      type: String,
+      required: true
+    },
+    image: {
+      type: String
+    },
+    //Decide if to remove this data object
+    date: {
+      type: Date,
+      default: Date.now()
+    },
+    snaps: {
+      type: Number,
+      default: 0
+    },
+    unsnaps: {
+      type: Number,
+      default: 0
+    },
+    //Look into this
+    favorites_count: {
+      type: Number,
+      default: 0
+    },
+    author: {
       type: Schema.Types.ObjectId,
-      ref: "comment"
-    }
-  ]
-});
+      ref: "user"
+    },
+    tags: [
+      {
+        type: String,
+        unique: true
+      }
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "comment"
+      }
+    ]
+  },
+  { timestamps: true }
+);
 
 PostSchema.statics.snap = function(id) {
   const Post = mongoose.model("post");
@@ -71,6 +98,12 @@ PostSchema.statics.findComments = function(id) {
   return this.findById(id)
     .populate("comments")
     .then(post => post.comments);
+};
+
+PostSchema.statics.getTags = function(id) {
+  return this.findById(id)
+    .populate("tags")
+    .then(post => post.tags);
 };
 
 mongoose.model("post", PostSchema);

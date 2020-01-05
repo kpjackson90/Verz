@@ -17,6 +17,9 @@ const PostType = new GraphQLObjectType({
     title: { type: GraphQLString },
     body: { type: GraphQLString },
     snaps: { type: GraphQLInt },
+    tags: {
+      type: new GraphQLList(GraphQLString)
+    },
     unsnaps: { type: GraphQLInt },
     date: { type: GraphQLString },
     comments: {

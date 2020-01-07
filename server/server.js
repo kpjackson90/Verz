@@ -9,6 +9,7 @@ const keys = require("./config/keys");
 const schema = require("./schema/schema");
 const path = require("path");
 const { auth } = require("./middleware/isAuth");
+const getErrorCode = require("./utils/errorHandler");
 
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.MONGO_URI, {
@@ -26,17 +27,20 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
-app.use(
-  "/graphql",
+app.use("/graphql", (req, res) => {
   auth,
-  expressGraphQL(req => ({
-    schema,
-    graphiql: true,
-    context: {
-      user: req.user
-    }
-  }))
-);
+    expressGraphQL({
+      schema,
+      graphiql: process.env.NODE_ENV === "development",
+      context: {
+        user: req.user
+      },
+      formatError: err => {
+        const error = getErrorCode(err.message);
+        return { message: error.message, statusCode: error.statusCode };
+      }
+    })(req, res);
+});
 
 if (process.env.NODE_ENV !== "production") {
   const webpackMiddleware = require("webpack-dev-middleware");

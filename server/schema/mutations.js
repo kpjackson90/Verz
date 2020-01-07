@@ -8,7 +8,7 @@ const PostType = require("./post_type");
 const UserType = require("./user_type");
 const CommentType = require("./comment_type");
 const AuthService = require("../services/auth");
-const { notAuthorized } = require("../middleware/errorHandlers");
+const { errorName } = require("../utils/errorConstants");
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -59,7 +59,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { title, body, tags }, context) {
         if (!context.user) {
-          throw new Error(notAuthorized);
+          throw new Error(errorName.UNAUTHORIZED);
         } else {
           return new Post({ title, body, tags }).save();
         }
@@ -73,7 +73,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { content, postId }, context) {
         if (!context.user) {
-          throw new Error(notAuthorized);
+          throw new Error(errorName.UNAUTHORIZED);
         } else {
           return Post.addComment(postId, content);
         }
@@ -86,7 +86,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { postId }, context) {
         if (!context.user) {
-          throw new Error(notAuthorized);
+          throw new Error(errorName.UNAUTHORIZED);
         } else {
           return User.favorite(postId);
         }
@@ -101,7 +101,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { username, bio, location }, context) {
         if (!context.user) {
-          throw new Error(notAuthorized);
+          throw new Error(errorName.UNAUTHORIZED);
         } else {
           return new User({ username, bio, location }).save();
         }

@@ -8,6 +8,7 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const { generateToken } = require("../middleware/helpers/generateToken.helper");
 const { setUserInfo } = require("../middleware/helpers/setUserInfo.helper");
 const keys = require("../config/keys");
+const { errorName } = require("../utils/errorConstants");
 
 const User = mongoose.model("user");
 
@@ -48,7 +49,7 @@ passport.use(
           return done(err);
         }
         if (!user) {
-          return done(null, false, "Invalid Credentials");
+          return done(null, false, errorName.INVALID);
         }
         user.comparePassword(password, (err, isMatch) => {
           if (err) {
@@ -57,7 +58,7 @@ passport.use(
           if (isMatch) {
             return done(null, user);
           }
-          return done(null, false, "Invalid credentials.");
+          return done(null, false, errorName.INVALID);
         });
       });
     }
@@ -68,12 +69,12 @@ async function createUser({ email, password, req }) {
   const user = new User({ email, password });
 
   if (!email || !password) {
-    throw new Error("You must provide an email and password");
+    throw new Error(errorName.EP_NOT_PROVIDED);
   }
   return User.findOne({ email })
     .then(existingUser => {
       if (existingUser) {
-        throw new Error("Email in use");
+        throw new Error(errorName.EMAIL_IN_USE);
       }
       return user.save();
     })
@@ -102,7 +103,7 @@ async function login({ email, password }) {
     User.findOne({ email })
       .then(user => {
         if (!user) {
-          return reject("Invalid user");
+          return reject(errorName.INVALID);
         }
         user.comparePassword(password, (err, isMatch) => {
           if (err) {
@@ -111,7 +112,7 @@ async function login({ email, password }) {
           if (isMatch) {
             return user;
           }
-          return done(null, false, "Invalid credentials.");
+          return done(null, false, errorName.INVALID);
         });
 
         const userInfo = setUserInfo(user);

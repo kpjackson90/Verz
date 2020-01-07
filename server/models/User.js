@@ -79,3 +79,5 @@ UserSchema.methods.comparePassword = function comparePassword(
 };
 
 UserSchema.statics.favorite = function(id) {};
+
+mongoose.model("user", UserSchema);

@@ -1,4 +1,4 @@
-const { errorType } = require("./errorHandler");
+const { errorType } = require("./errorConstants");
 
 const getErrorCode = errorName => {
   return errorType[errorName];

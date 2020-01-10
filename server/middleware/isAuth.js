@@ -1,5 +1,5 @@
-const jwt = require("express-jwt");
-const keys = require("../config/keys");
+const jwt = require('express-jwt');
+const keys = require('../config/keys');
 
 //auth middleware
 exports.auth = jwt({

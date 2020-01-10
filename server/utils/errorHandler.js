@@ -1,7 +1,7 @@
-const { errorType } = require("./errorConstants");
+const {errorType} = require('./errorConstants');
 
-const getErrorCode = errorName => {
-  return errorType[errorName];
+const getErrorCode = ({message}) => {
+  return errorType[message];
 };
 
 module.exports = getErrorCode;

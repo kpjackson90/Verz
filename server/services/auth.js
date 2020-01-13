@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const passportJWT = require('passport-jwt');
-const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const passportJWT = require("passport-jwt");
+const jwt = require("jsonwebtoken");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-const {generateToken} = require('../middleware/helpers/generateToken.helper');
-const {setUserInfo} = require('../middleware/helpers/setUserInfo.helper');
-const keys = require('../config/keys');
-const {errorName} = require('../utils/errorConstants');
+const {generateToken} = require("../middleware/helpers/generateToken.helper");
+const {setUserInfo} = require("../middleware/helpers/setUserInfo.helper");
+const keys = require("../config/keys");
+const {errorName} = require("../utils/errorConstants");
 
-const User = mongoose.model('user');
+const User = mongoose.model("user");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -42,7 +42,7 @@ passport.use(
 
 passport.use(
   new LocalStrategy(
-    {usernameField: 'email', passwordField: 'password'},
+    {usernameField: "email", passwordField: "password"},
     (email, password, done) => {
       User.findOne({email}, (err, user) => {
         if (err) {
@@ -96,7 +96,7 @@ function createUser({email, password, req}) {
 
 async function login({email, password, req}) {
   return new Promise((resolve, reject) => {
-    passport.authenticate('local', {session: false}, async (err, user) => {
+    passport.authenticate("local", {session: false}, async (err, user) => {
       try {
         if (err) {
           throw new Error(err);
@@ -120,34 +120,6 @@ async function login({email, password, req}) {
     })({body: {email, password}}); //end of passport authenticate
   });
 }
-
-// async function login({email, password}) {
-//   return new Promise((resolve, reject) => {
-//     User.findOne({email})
-//       .then(user => {
-//         if (!user) {
-//           return reject(errorName.INVALID);
-//         }
-//         user.comparePassword(password, (err, isMatch) => {
-//           if (err) {
-//             return done(err);
-//           }
-//           if (isMatch) {
-//             return user;
-//           }
-//           return done(null, false, errorName.INVALID);
-//         });
-
-//         const userInfo = setUserInfo(user);
-//         const token = generateToken(userInfo);
-
-//         resolve({id: user.id, token, email});
-//       })
-//       .catch(error => {
-//         reject(error);
-//       });
-//   });
-// }
 
 async function verifyToken({token}) {
   try {

@@ -1,3 +1,4 @@
+process.traceDeprecation = true; /*This was used to trace deprecations*/
 var webpack = require("webpack");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 var path = require("path");
@@ -25,7 +26,7 @@ module.exports = {
         use: [
           {
             loader: "url-loader",
-            options: { limit: 40000 }
+            options: {limit: 40000}
           },
           "image-webpack-loader"
         ]
@@ -34,6 +35,12 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true
+  },
+  mode: "production",
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
   },
   plugins: [
     new HtmlWebpackPlugin({

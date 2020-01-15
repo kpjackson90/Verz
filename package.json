@@ -21,7 +21,7 @@
       "^mongoose$": "<rootDir>/node_modules/mongoose"
     },
     "setupFilesAfterEnv": [
-      "./server/tests/setup.js"
+      "./server/tests/config/databaseConnection.js"
     ]
   },
   "scripts": {

@@ -1,5 +1,7 @@
-const bcrypt = require("bcrypt-nodejs");
-const mongoose = require("mongoose");
+const bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
+require('./Post');
+const Post = mongoose.model('post');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -30,7 +32,7 @@ const UserSchema = new Schema({
   favorites: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Article"
+      ref: 'post'
     }
   ],
   location: {
@@ -39,20 +41,20 @@ const UserSchema = new Schema({
   followers: [
     {
       type: Schema.Types.ObjectId,
-      ref: "user"
+      ref: 'user'
     }
   ],
   following: [
     {
       type: Schema.Types.ObjectId,
-      ref: "user"
+      ref: 'user'
     }
   ]
 });
 
-UserSchema.pre("save", function save(next) {
+UserSchema.pre('save', function save(next) {
   const user = this;
-  if (!user.isModified("password")) {
+  if (!user.isModified('password')) {
     return next();
   }
   bcrypt.genSalt(10, (err, salt) => {
@@ -78,6 +80,34 @@ UserSchema.methods.comparePassword = function comparePassword(
   });
 };
 
-UserSchema.statics.favorite = function(id) {};
+UserSchema.statics.favorite = async function({id, userId}) {
+  try {
+    //find Post in database based on ID id.
+    //const favoritePost = await Post.findOne({_id: id});
 
-mongoose.model("user", UserSchema);
+    /*Find post in database based on Id
+     check if user already favorites post.
+     if not then add Post to the front of user array*/
+    const [favoritePost, existingUser] = await Promise.all([
+      Post.findOne({_id: id}),
+      this.findOne({_id: userId})
+    ]);
+
+    const {favorites} = existingUser;
+    const existingFavorite = favorites.indexOf(favoritePost._id);
+
+    if (existingFavorite >= 0) {
+      //handle error with proper error message
+      throw new Error('Cannot favorite the same item twice');
+    }
+
+    favorites.unshift(favoritePost._id);
+    await existingUser.updateOne({$set: {favorites}});
+
+    return favoritePost;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+mongoose.model('user', UserSchema);

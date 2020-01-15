@@ -92,12 +92,21 @@ const mutation = new GraphQLObjectType({
       args: {
         postId: {type: GraphQLID}
       },
-      resolve(parentValue, {postId}, context) {
-        if (!context.user) {
-          throw new Error(errorName.UNAUTHORIZED);
-        } else {
-          return User.favorite(postId);
-        }
+      resolve(parentValue, {postId}, {user}) {
+        // if (!user) {
+        //   throw new Error(errorName.UNAUTHORIZED);
+        // } else {
+        //   const postInfo = {
+        //     id: postId,
+        //     userId: user._id
+        //   };
+        //   return User.favorite(postInfo);
+        // }
+        const postInfo = {
+          id: postId,
+          userId: '5e17a25d38802e2ce029e16f'
+        };
+        return User.favorite(postInfo);
       }
     },
     addUserInfo: {

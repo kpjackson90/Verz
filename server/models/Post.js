@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
+require('./User');
+const User = mongoose.model('user');
+
 //Review these
 // var uniqueValidator = require('mongoose-unique-validator');
 // var slug = require('slug');
@@ -107,8 +110,11 @@ PostSchema.statics.getTags = function(id) {
 };
 
 PostSchema.statics.findAuthor = async function(id) {
-  const p = await this.findById(id);
-  return p.author;
+  const {author} = await this.findById(id);
+
+  const a = await User.findOne({_id: author});
+  console.log('user', a);
+  //return p.author;
 };
 
 mongoose.model('post', PostSchema);

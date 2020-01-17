@@ -29,15 +29,15 @@ const PostType = new GraphQLObjectType({
       resolve(parentValue) {
         return Post.findComments(parentValue.id);
       }
+    },
+    author: {
+      //this should be
+      type: require('./user_type'),
+      //type: UserType, //remove this
+      resolve(parentValue) {
+        return Post.findAuthor(parentValue.id);
+      }
     }
-    // author: {
-         //this should be
-         //type: require('./user/type'),
-    //   type: UserType, //remove this
-    //   resolve(parentValue) {
-    //     return Post.findAuthor(parentValue.id);
-    //   }
-    // }
   })
 });
 

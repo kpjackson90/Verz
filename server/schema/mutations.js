@@ -1,5 +1,11 @@
 const graphql = require('graphql');
-const {GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList} = graphql;
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLID,
+  GraphQLList,
+  GraphQLNonNull
+} = graphql;
 const mongoose = require('mongoose');
 const Post = mongoose.model('post');
 const Comment = mongoose.model('comment');
@@ -92,23 +98,37 @@ const mutation = new GraphQLObjectType({
       args: {
         postId: {type: GraphQLID}
       },
-      resolve(parentValue, {postId}, {user}) {
-        // if (!user) {
-        //   throw new Error(errorName.UNAUTHORIZED);
-        // } else {
-        //   const postInfo = {
-        //     id: postId,
-        //     userId: user._id
-        //   };
-        //   return User.favorite(postInfo);
-        // }
-        const postInfo = {
-          id: postId,
-          userId: '5e17a25d38802e2ce029e16f'
-        };
-        return User.favorite(postInfo);
+      async resolve(parentValue, {postId}, {user}) {
+        if (!user) {
+          throw new Error(errorName.UNAUTHORIZED);
+        } else {
+          const postInfo = {
+            id: postId,
+            userId: user._id
+          };
+          return await User.favorite(postInfo);
+        }
       }
     },
+
+    unFavoritePost: {
+      type: PostType,
+      args: {
+        postId: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      async resolve(parentValue, {postId}, {user}) {
+        if (!user) {
+          throw new Error(errorName.UNAUTHORIZED);
+        }
+        const postInfo = {
+          id: postId,
+          userId: user._id
+        };
+
+        return await User.unFavorite(postInfo);
+      }
+    },
+
     addUserInfo: {
       type: UserType,
       args: {

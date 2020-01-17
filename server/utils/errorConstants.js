@@ -4,7 +4,9 @@ exports.errorName = {
   EP_NOT_PROVIDED: 'EP_NOT_PROVIDED',
   EMAIL_IN_USE: 'EMAIL_IN_USE',
   DUPLICATE_FAVORITE: 'DUPLICATE_FAVORITE',
-  MISSING_POST: 'MISSING_POST'
+  MISSING_POST: 'MISSING_POST',
+  DUPLICATE_FOLLOWER: 'DUPLICATE_FOLLOWER',
+  MISSING_USER: 'MISSING_USER'
 };
 
 exports.errorType = {
@@ -34,6 +36,14 @@ exports.errorType = {
   },
   MISSING_POST: {
     message: 'This post does not exist',
+    statusCode: 404
+  },
+  DUPLICATE_FOLLOWER: {
+    message: 'You are already following this user',
+    statusCode: 422
+  },
+  MISSING_USER: {
+    message: 'User does not exist',
     statusCode: 404
   }
 };

@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
 //Review these
 // var uniqueValidator = require('mongoose-unique-validator');
@@ -46,7 +46,7 @@ const PostSchema = new Schema(
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: "user"
+      ref: 'user'
     },
     tags: [
       {
@@ -57,15 +57,15 @@ const PostSchema = new Schema(
     comments: [
       {
         type: Schema.Types.ObjectId,
-        ref: "comment"
+        ref: 'comment'
       }
     ]
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
 PostSchema.statics.snap = function(id) {
-  const Post = mongoose.model("post");
+  const Post = mongoose.model('post');
 
   return Post.findById(id).then(post => {
     ++post.snaps;
@@ -74,7 +74,7 @@ PostSchema.statics.snap = function(id) {
 };
 
 PostSchema.statics.unsnap = function(id) {
-  const Post = mongoose.model("post");
+  const Post = mongoose.model('post');
 
   return Post.findById(id).then(post => {
     ++post.unsnaps;
@@ -83,10 +83,10 @@ PostSchema.statics.unsnap = function(id) {
 };
 
 PostSchema.statics.addComment = function(id, content) {
-  const Comment = mongoose.model("comment");
+  const Comment = mongoose.model('comment');
 
   return this.findById(id).then(post => {
-    const comment = new Comment({ content, post });
+    const comment = new Comment({content, post});
     post.comments.push(comment);
     return Promise.all([comment.save(), post.save()]).then(
       ([comment, post]) => post
@@ -96,14 +96,19 @@ PostSchema.statics.addComment = function(id, content) {
 
 PostSchema.statics.findComments = function(id) {
   return this.findById(id)
-    .populate("comments")
+    .populate('comments')
     .then(post => post.comments);
 };
 
 PostSchema.statics.getTags = function(id) {
   return this.findById(id)
-    .populate("tags")
+    .populate('tags')
     .then(post => post.tags);
 };
 
-mongoose.model("post", PostSchema);
+PostSchema.statics.findAuthor = async function(id) {
+  const p = await this.findById(id);
+  return p.author;
+};
+
+mongoose.model('post', PostSchema);

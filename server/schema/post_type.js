@@ -9,7 +9,7 @@ const {
 } = graphql;
 
 const CommentType = require('./comment_type');
-//const UserType = require('./user_type');
+//const UserType = require('./user_type'); and remove this
 const Post = mongoose.model('post');
 
 const PostType = new GraphQLObjectType({
@@ -31,7 +31,9 @@ const PostType = new GraphQLObjectType({
       }
     }
     // author: {
-    //   type: UserType,
+         //this should be
+         //type: require('./user/type'),
+    //   type: UserType, //remove this
     //   resolve(parentValue) {
     //     return Post.findAuthor(parentValue.id);
     //   }

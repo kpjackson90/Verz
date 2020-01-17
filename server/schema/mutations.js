@@ -75,7 +75,16 @@ const mutation = new GraphQLObjectType({
         if (!user) {
           throw new Error(errorName.UNAUTHORIZED);
         } else {
-          return await new Post({title, body, tags, author: user}).save();
+          let newPost = await new Post({
+            title,
+            body,
+            tags,
+            author: user
+          }).save();
+          let existingUser = await User.findOne({_id: user});
+          existingUser.posts.push(newPost._id);
+          await existingUser.updateOne({$set: {posts: existingUser.posts}});
+          return newPost;
         }
       }
     },

@@ -25,13 +25,13 @@ const UserType = new GraphQLObjectType({
       resolve(parentValue) {
         return User.findFollowers(parentValue.id);
       }
+    },
+    posts: {
+      type: new GraphQLList(PostType),
+      async resolve(parentValue) {
+        return await User.fetchPost(parentValue.id);
+      }
     }
-    // posts: {
-    //   type: new GraphQLList(PostType),
-    //   resolve(parentValue) {
-    //     User.fetchPost(parentValue.id);
-    //   }
-    // }
   })
 });
 

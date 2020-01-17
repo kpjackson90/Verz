@@ -207,8 +207,17 @@ UserSchema.statics.findFollowers = async function(id) {
 };
 
 UserSchema.statics.fetchPost = async function(id) {
-  const existingUser = await this.findOne({_id: id});
-  console.log(existingUser);
+  //console.log('Id:', id);
+  const {posts} = await this.findOne({_id: id});
+  //console.log(user);
+  //console.log('following', following);
+  const userPost = await Promise.all(
+    posts.map(item => Post.findOne({_id: item}))
+  );
+
+  console.log(userPost);
+  return userPost;
+  //console.log(existingUser);
 };
 
 mongoose.model('user', UserSchema);

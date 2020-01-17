@@ -152,10 +152,10 @@ UserSchema.statics.followUser = async function({id, userId}) {
     const {following} = existingUser;
     const {followers} = newFollow;
 
-    // const alreadyFollowing = followers.indexOf(newFollow._id);
-    // if (alreadyFollowing >= 0) {
-    //   throw new Error(errorName.DUPLICATE_FOLLOWER);
-    // }
+    const alreadyFollowing = followers.indexOf(newFollow._id);
+    if (alreadyFollowing >= 0) {
+      throw new Error(errorName.DUPLICATE_FOLLOWER);
+    }
 
     //existing user follows user. add to following
     following.unshift(newFollow._id);
@@ -177,47 +177,30 @@ UserSchema.statics.followUser = async function({id, userId}) {
   }
 };
 
-UserSchema.statics.viewFollowing = async function(id) {
+UserSchema.statics.findFollowing = async function(id) {
   try {
-    //get current user
-    const existingUser = await this.findOne({_id: id});
-
-    //get users this user is following
-    const {following} = existingUser;
-
-    const usersFollowed = await Promise.all(
-      following.map(userId =>
-        this.findOne({_id: userId}).select({
-          email: 1
-        })
-      )
+    const {following} = await this.findOne({_id: id});
+    const followedUsers = await Promise.all(
+      following.map(user => this.findOne({_id: user}))
     );
-    return usersFollowed;
+
+    return followedUsers;
   } catch (err) {
-    console.log('inside error');
+    throw new Error(errorName.MISSING_USER);
   }
 };
 
 UserSchema.statics.findFollowers = async function(id) {
-  const {following} = await this.findOne({_id: id});
-  const Users = await Promise.all(
-    following.map(user => this.findOne({_id: user}))
-  );
-  return Users;
-};
+  try {
+    const {followers} = await this.findOne({_id: id});
+    const followingUsers = await Promise.all(
+      followers.map(user => this.findOne({_id: user}))
+    );
 
-UserSchema.statics.fetchPost = async function(id) {
-  //console.log('Id:', id);
-  const {posts} = await this.findOne({_id: id});
-  //console.log(user);
-  //console.log('following', following);
-  const userPost = await Promise.all(
-    posts.map(item => Post.findOne({_id: item}))
-  );
-
-  console.log(userPost);
-  return userPost;
-  //console.log(existingUser);
+    return followingUsers;
+  } catch (err) {
+    throw new Error(errorName.MISSING_USER);
+  }
 };
 
 mongoose.model('user', UserSchema);

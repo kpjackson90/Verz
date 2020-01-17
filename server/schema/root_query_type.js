@@ -35,7 +35,6 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       async resolve(parentValue, args, {user}) {
-        console.log(user);
         if (!user) {
           throw new Error(errorName.UNAUTHORIZED);
         } else {

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
+const {errorName} = require('../utils/errorConstants');
 const {Schema} = mongoose;
-
-//require('./User');
-//const User = mongoose.model('user');
 
 //Review these
 // var uniqueValidator = require('mongoose-unique-validator');
@@ -109,13 +107,38 @@ PostSchema.statics.getTags = function(id) {
     .then(post => post.tags);
 };
 
-PostSchema.statics.findAuthor = async function(id) {
-  const User = mongoose.model('user');
-  const {author} = await this.findById(id);
+PostSchema.statics.fetchPost = async function(id) {
+  const existingPost = await this.find({author: id});
+  return existingPost;
+};
 
-  const a = await User.findOne({_id: author});
-  //console.log('user', a);
-  return a;
+PostSchema.statics.addPost = async function({title, body, tags, userId}) {
+  try {
+    const User = mongoose.model('user');
+    const [newPost, existingUser] = await Promise.all([
+      this.create({title, body, tags, author: userId}),
+      User.findOne({_id: userId})
+    ]);
+
+    const {posts} = existingUser;
+    posts.unshift(newPost._id);
+    await existingUser.updateOne({$set: {posts}});
+
+    return newPost;
+  } catch (err) {
+    //handle error
+  }
+};
+
+PostSchema.statics.findAuthor = async function(id) {
+  try {
+    const User = mongoose.model('user');
+    const {author} = await this.findById(id);
+    const user = await User.findOne({_id: author});
+    return user;
+  } catch (err) {
+    throw new Error(errorName.MISSING_USER);
+  }
 };
 
 mongoose.model('post', PostSchema);

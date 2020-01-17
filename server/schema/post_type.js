@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const graphql = require('graphql');
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -9,7 +10,6 @@ const {
 } = graphql;
 
 const CommentType = require('./comment_type');
-//const UserType = require('./user_type'); and remove this
 const Post = mongoose.model('post');
 
 const PostType = new GraphQLObjectType({
@@ -31,11 +31,9 @@ const PostType = new GraphQLObjectType({
       }
     },
     author: {
-      //this should be
       type: require('./user_type'),
-      //type: UserType, //remove this
-      resolve(parentValue) {
-        return Post.findAuthor(parentValue.id);
+      async resolve(parentValue) {
+        return await Post.findAuthor(parentValue.id);
       }
     }
   })

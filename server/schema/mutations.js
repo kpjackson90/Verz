@@ -74,18 +74,26 @@ const mutation = new GraphQLObjectType({
       async resolve(parentValue, {title, body, tags}, {user}) {
         if (!user) {
           throw new Error(errorName.UNAUTHORIZED);
-        } else {
-          let newPost = await new Post({
-            title,
-            body,
-            tags,
-            author: user
-          }).save();
-          let existingUser = await User.findOne({_id: user});
-          existingUser.posts.push(newPost._id);
-          await existingUser.updateOne({$set: {posts: existingUser.posts}});
-          return newPost;
         }
+        // else {
+        //   let newPost = await new Post({
+        //     title,
+        //     body,
+        //     tags,
+        //     author: user
+        //   }).save();
+        //   let existingUser = await User.findOne({_id: user});
+        //   existingUser.posts.push(newPost._id);
+        //   await existingUser.updateOne({$set: {posts: existingUser.posts}});
+        //   return newPost;
+        // }
+        const userPost = {
+          title,
+          body,
+          tags,
+          userId: user._id
+        };
+        return await Post.addPost(userPost);
       }
     },
     addCommentToPost: {
@@ -209,27 +217,7 @@ const mutation = new GraphQLObjectType({
           id: userId,
           userId: user._id
         };
-
         return await User.followUser(userInfo);
-      }
-    },
-
-    viewFollowing: {
-      type: GraphQLList(UserType),
-      // args: {
-      //   userId: {type: new GraphQLNonNull(GraphQLID)}
-      // },
-      async resolve(parentValue, args, {user}) {
-        if (!user) {
-          throw new Error(errorName.UNAUTHORIZED);
-        }
-
-        // const userInfo = {
-        //   id: userId,
-        //   userId: user._id
-        // };
-
-        return await User.viewFollowing(user._id);
       }
     }
   }

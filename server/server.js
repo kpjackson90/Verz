@@ -27,22 +27,31 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
-app.use('/graphql', (req, res) => {
-  auth,
-    expressGraphQL({
-      schema,
-      context: {
-        req,
-        user: req.user
-      },
-      // graphiql: process.env.NODE_ENV === 'development',
-      graphiql: true,
 
-      customFormatErrorFn: err => {
-        const {message, statusCode} = getErrorCode(err);
-        return {message, statusCode};
-      }
-    })(req, res);
+app.use((req, res, next) => {
+  if (req.headers['authorization']) {
+    return next();
+  }
+  return next('route');
+});
+
+app.use(auth);
+
+app.use('/graphql', (req, res) => {
+  expressGraphQL({
+    schema,
+    context: {
+      req,
+      user: req.user
+    },
+    // graphiql: process.env.NODE_ENV === 'development',
+    graphiql: true,
+
+    customFormatErrorFn: err => {
+      const {message, statusCode} = getErrorCode(err);
+      return {message, statusCode};
+    }
+  })(req, res);
 });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -56,5 +65,11 @@ if (process.env.NODE_ENV !== 'production') {
     res.sendFile(path.join(__dirname, 'build/index.html'));
   });
 }
+
+//this may be temporary
+app.use((err, req, res, next) => {
+  console.log(err);
+  next();
+});
 
 module.exports = app;

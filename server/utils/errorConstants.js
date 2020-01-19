@@ -2,7 +2,9 @@ exports.errorName = {
   UNAUTHORIZED: 'UNAUTHORIZED',
   INVALID: 'INVALID',
   EP_NOT_PROVIDED: 'EP_NOT_PROVIDED',
-  EMAIL_IN_USE: 'EMAIL_IN_USE'
+  EMAIL_IN_USE: 'EMAIL_IN_USE',
+  DUPLICATE_FAVORITE: 'DUPLICATE_FAVORITE',
+  MISSING_POST: 'MISSING_POST'
 };
 
 exports.errorType = {
@@ -24,5 +26,14 @@ exports.errorType = {
   EMAIL_IN_USE: {
     message: 'Email address is already in use',
     statusCode: 401
+  },
+
+  DUPLICATE_FAVORITE: {
+    message: 'Item already added to your list of favorites',
+    statusCode: 422
+  },
+  MISSING_POST: {
+    message: 'This post does not exist',
+    statusCode: 404
   }
 };

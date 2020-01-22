@@ -1,23 +1,24 @@
 const { graphql } = require("graphql");
-const schema = require("../../schema/schema");
+const schema = require("../../server/schema/schema");
 const User = mongoose.model("user");
-const { getContext, setupTest } = require("./config/helper");
+const { setupDB } = require("./config/databaseConnection");
 
-beforeEach(async () => await setupTest());
+beforeEach(async () => await setupDB());
 
-it("should be null when user is not logged in", async () => {
-  const query = `
-        user {
-            username
-        }
-    `;
+describe("test", () => {
+  it("should be null when user is not logged in", async () => {
+    const query = `
+          user {
+              username
+          }
+      `;
 
-  const rootValue = {};
-  const context = getContext();
+    const rootValue = {};
 
-  const result = await graphql(schema, query, rootValue, context);
-  const { data } = result;
+    const result = await graphql(schema, query, rootValue);
+    const { data } = result;
 
-  expect(data.user).toBe(null);
-  expect(data).toMatchSnapshot();
+    expect(data.user).toBe(null);
+    expect(data).toMatchSnapshot();
+  });
 });

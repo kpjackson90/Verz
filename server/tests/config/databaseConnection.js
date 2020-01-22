@@ -1,17 +1,27 @@
 const mongoose = require("mongoose");
-const keys = require("../../config/keys");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 
-mongoose.Promise = global.Promise;
-mongoose.connect(keys.MONGO_URI, {
-  server: {
-    auto_reconnect: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 1000
-  }
-});
+jest.setTimeout(600000);
 
-mongoose.connection
-  .once("open", () => console.log(`Connected to ${keys.MONGO_URI}`))
-  .on("error", error =>
-    console.log(`Error connecting to ${keys.MONGO_URI}`, error)
-  );
+let mongoServer;
+
+function connect() {
+  beforeAll(async () => {
+    mongoServer = new MongoMemoryServer();
+    const mongoUri = await mongoServer.getUri();
+    await mongoose.connect(mongoUri, err => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  });
+
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+}
+
+export async function setupDB() {
+  await connect();
+}

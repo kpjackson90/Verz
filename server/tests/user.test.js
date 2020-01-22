@@ -12,7 +12,7 @@ describe("test", () => {
               username
           }
       `;
-
+    console.log(query);
     const rootValue = {};
 
     const result = await graphql(schema, query, rootValue);

@@ -48,6 +48,12 @@ const UserSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "user"
     }
+  ],
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'post'
+    }
   ]
 });
 
@@ -135,4 +141,69 @@ UserSchema.statics.unFavorite = async function({ id, userId }) {
   }
 };
 
-mongoose.model("user", UserSchema);
+UserSchema.statics.followUser = async function({id, userId}) {
+  try {
+    const [existingUser, newFollow] = await Promise.all([
+      this.findOne({_id: userId}),
+      this.findOne({_id: id})
+    ]);
+
+    const {following} = existingUser;
+    const {followers} = newFollow;
+
+    console.log('following', following);
+    console.log('followers', followers);
+
+    const alreadyFollowing = following.indexOf(newFollow._id);
+
+    if (alreadyFollowing >= 0) {
+      throw new Error(errorName.DUPLICATE_FOLLOWER);
+    }
+
+    //existing user follows user. add to following
+    following.unshift(newFollow._id);
+
+    //user gets new follower. add to followers
+    followers.unshift(existingUser._id);
+
+    await Promise.all([
+      await existingUser.updateOne({$set: {following}}),
+      await newFollow.updateOne({$set: {followers}})
+    ]);
+
+    return newFollow;
+  } catch (err) {
+    if (err.message === 'DUPLICATE_FOLLOWER') {
+      throw err;
+    }
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.findFollowing = async function(id) {
+  try {
+    const {following} = await this.findOne({_id: id});
+    const followedUsers = await Promise.all(
+      following.map(user => this.findOne({_id: user}))
+    );
+
+    return followedUsers;
+  } catch (err) {
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.findFollowers = async function(id) {
+  try {
+    const {followers} = await this.findOne({_id: id});
+    const followingUsers = await Promise.all(
+      followers.map(user => this.findOne({_id: user}))
+    );
+
+    return followingUsers;
+  } catch (err) {
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+mongoose.model('user', UserSchema);

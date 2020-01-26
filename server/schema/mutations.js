@@ -71,12 +71,18 @@ const mutation = new GraphQLObjectType({
         body: {type: GraphQLString},
         tags: {type: GraphQLList(GraphQLString)}
       },
-      resolve(parentValue, {title, body, tags}, context) {
-        if (!context.user) {
+      async resolve(parentValue, {title, body, tags}, {user}) {
+        if (!user) {
           throw new Error(errorName.UNAUTHORIZED);
-        } else {
-          return new Post({title, body, tags}).save();
         }
+       
+        const userPost = {
+          title,
+          body,
+          tags,
+          userId: user._id
+        };
+        return await Post.addPost(userPost);
       }
     },
     addCommentToPost: {
@@ -184,6 +190,23 @@ const mutation = new GraphQLObjectType({
       args: {id: {type: GraphQLID}},
       resolve(parentValue, {id}) {
         return Post.remove({_id: id});
+      }
+    },
+    followUser: {
+      type: UserType,
+      args: {
+        userId: {type: new GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(parentValue, {userId}, {user}) {
+        if (!user) {
+          throw new Error(errorName.UNAUTHORIZED);
+        }
+
+        const userInfo = {
+          id: userId,
+          userId: user._id
+        };
+        return await User.followUser(userInfo);
       }
     }
   }

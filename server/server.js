@@ -48,6 +48,7 @@ app.use('/graphql', (req, res) => {
     graphiql: true,
 
     customFormatErrorFn: err => {
+      console.log('Server Error: ', err.message);
       const {message, statusCode} = getErrorCode(err);
       return {message, statusCode};
     }

@@ -152,7 +152,11 @@ UserSchema.statics.followUser = async function({id, userId}) {
     const {following} = existingUser;
     const {followers} = newFollow;
 
-    const alreadyFollowing = followers.indexOf(newFollow._id);
+    console.log('following', following);
+    console.log('followers', followers);
+
+    const alreadyFollowing = following.indexOf(newFollow._id);
+
     if (alreadyFollowing >= 0) {
       throw new Error(errorName.DUPLICATE_FOLLOWER);
     }

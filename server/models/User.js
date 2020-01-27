@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt-nodejs");
 const mongoose = require("mongoose");
+const Post = mongoose.model("post");
 const Schema = mongoose.Schema;
-
+const { errorName } = require("../utils/errorConstants");
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -30,7 +31,7 @@ const UserSchema = new Schema({
   favorites: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Article"
+      ref: "post"
     }
   ],
   location: {
@@ -46,6 +47,12 @@ const UserSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "user"
+    }
+  ],
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'post'
     }
   ]
 });
@@ -78,6 +85,125 @@ UserSchema.methods.comparePassword = function comparePassword(
   });
 };
 
-UserSchema.statics.favorite = function(id) {};
+UserSchema.statics.favorite = async function({ id, userId }) {
+  try {
+    /*Find post in database based on Id
+     check if user already favorite post.
+     if not then add Post to the front of user array*/
+    const [favoritePost, existingUser] = await Promise.all([
+      Post.findOne({ _id: id }),
+      this.findOne({ _id: userId })
+    ]);
 
-mongoose.model("user", UserSchema);
+    const { favorites } = existingUser;
+    const existingFavorite = favorites.indexOf(favoritePost._id);
+
+    if (existingFavorite >= 0) {
+      throw new Error(errorName.DUPLICATE_FAVORITE);
+    }
+
+    favorites.unshift(favoritePost._id);
+    await existingUser.updateOne({ $set: { favorites } });
+
+    return favoritePost;
+  } catch (err) {
+    if (err.message === "DUPLICATE_FAVORITE") {
+      throw err;
+    }
+    throw new Error(errorName.MISSING_POST);
+  }
+};
+
+UserSchema.statics.unFavorite = async function({ id, userId }) {
+  try {
+    /**Retrieve post and user. If post is not found, an error is thrown */
+    const [favoritePost, existingUser] = await Promise.all([
+      Post.findOne({ _id: id }),
+      this.findOne({ _id: userId })
+    ]);
+
+    /**get array of favorites. Search and remove this post
+     *  Check length of this array to determine if post was found
+     * Update the database with the current favorites
+     */
+    const { favorites } = existingUser;
+    const initialLength = favorites.length;
+    const newFavorites = favorites.filter(post => post != id);
+    const finalLength = newFavorites.length;
+
+    if (initialLength !== finalLength) {
+      await existingUser.updateOne({ $set: { favorites: newFavorites } });
+      return favoritePost;
+    }
+    throw Error;
+  } catch (err) {
+    throw new Error(errorName.MISSING_POST);
+  }
+};
+
+UserSchema.statics.followUser = async function({id, userId}) {
+  try {
+    const [existingUser, newFollow] = await Promise.all([
+      this.findOne({_id: userId}),
+      this.findOne({_id: id})
+    ]);
+
+    const {following} = existingUser;
+    const {followers} = newFollow;
+
+    console.log('following', following);
+    console.log('followers', followers);
+
+    const alreadyFollowing = following.indexOf(newFollow._id);
+
+    if (alreadyFollowing >= 0) {
+      throw new Error(errorName.DUPLICATE_FOLLOWER);
+    }
+
+    //existing user follows user. add to following
+    following.unshift(newFollow._id);
+
+    //user gets new follower. add to followers
+    followers.unshift(existingUser._id);
+
+    await Promise.all([
+      await existingUser.updateOne({$set: {following}}),
+      await newFollow.updateOne({$set: {followers}})
+    ]);
+
+    return newFollow;
+  } catch (err) {
+    if (err.message === 'DUPLICATE_FOLLOWER') {
+      throw err;
+    }
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.findFollowing = async function(id) {
+  try {
+    const {following} = await this.findOne({_id: id});
+    const followedUsers = await Promise.all(
+      following.map(user => this.findOne({_id: user}))
+    );
+
+    return followedUsers;
+  } catch (err) {
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.findFollowers = async function(id) {
+  try {
+    const {followers} = await this.findOne({_id: id});
+    const followingUsers = await Promise.all(
+      followers.map(user => this.findOne({_id: user}))
+    );
+
+    return followingUsers;
+  } catch (err) {
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+mongoose.model('user', UserSchema);

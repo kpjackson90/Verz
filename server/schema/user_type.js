@@ -1,29 +1,41 @@
-const mongoose = require("mongoose");
-const graphql = require("graphql");
-const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
-const User = mongoose.model("user");
-const Post = mongoose.model("post");
-const PostType = require("./post_type");
+const mongoose = require('mongoose');
+const graphql = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList} = graphql;
+const User = mongoose.model('user');
+const Post = mongoose.model('post');
+const PostType = require('./post_type');
 
 const UserType = new GraphQLObjectType({
-  name: "UserType",
+  name: 'UserType',
   fields: () => ({
-    id: { type: GraphQLID },
-    token: { type: GraphQLString },
-    email: { type: GraphQLString },
-    username: { type: GraphQLString },
-    bio: { type: GraphQLString },
-    location: { type: GraphQLString },
+    id: {type: GraphQLID},
+    token: {type: GraphQLString},
+    email: {type: GraphQLString},
+    username: {type: GraphQLString},
+    bio: {type: GraphQLString},
+    location: {type: GraphQLString},
     favorites: {
-      type: GraphQLList(PostType),
+      type: new GraphQLList(PostType),
       resolve(parentValue) {
         return User.favorite(parentValue.id);
       }
     },
     following: {
-      type: GraphQLList(UserType),
-      resolve(parentValue) {
-        return User.findFollowers(parentValue.id);
+      type: new GraphQLList(UserType),
+      async resolve(parentValue) {
+        return await User.findFollowing(parentValue.id);
+      }
+    },
+    followers: {
+      type: new GraphQLList(UserType),
+      async resolve({id}) {
+        return await User.findFollowers(id);
+      }
+    },
+    posts: {
+      type: new GraphQLList(PostType),
+      async resolve({id}) {
+        return await Post.fetchPost(id);
       }
     }
   })

@@ -1,11 +1,11 @@
-const app = require("../server.js");
-const mongoose = require("mongoose");
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const supertest = require("supertest");
+const app = require('../server.js');
+const mongoose = require('mongoose');
+const {MongoMemoryServer} = require('mongodb-memory-server');
+const supertest = require('supertest');
 const request = supertest(app);
-const { graphql } = require("graphql");
-const schema = require("../../server/schema/schema");
-const User = mongoose.model("User", new mongoose.Schema({ name: String }));
+const {graphql} = require('graphql');
+const schema = require('../../server/schema/schema');
+const User = mongoose.model('User', new mongoose.Schema({name: String}));
 
 //jest.setTimeout(600000);
 
@@ -32,11 +32,36 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
-describe("this is a test test", () => {
-  it("test endpoint", async () => {
-    const res = await request.get("/graphql");
+describe('this is a test test', () => {
+  it('test endpoint', async () => {
+    const query = `
+    {
+      user{
+          id,
+          email,
+          followers{
+              email
+          },
+          following{
+              id,
+              email,
+              posts{
+                  title,
+                  body
+              }
+              
+          }
+      }
+  }
+    `;
+    const res = await request.post('/graphql').send({query});
 
-    expect(response.status).toBe(200);
-    done();
+    expect(res.body).toHaveProperty('errors');
+    expect(res.body.errors[0]).toHaveProperty(
+      'message',
+      'Authentication is needed to get requested response.'
+    );
+    expect(res.body.errors[0]).toHaveProperty('statusCode', 401);
+    expect(res.body.data).toHaveProperty('user', null);
   });
 });

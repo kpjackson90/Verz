@@ -31,7 +31,7 @@
     "build": "npm run clean && webpack",
     "serve": "webpack-dev-server --port $PORT --host 0.0.0.0",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
-    "test": "jest --coverage --forceExit",
+    "test": "jest --coverage --forceExit --detectOpenHandles",
     "test:watch": "jest --watch --coverage --detectOpenHandles"
   },
   "author": "Kareem Phillip-Jackson",

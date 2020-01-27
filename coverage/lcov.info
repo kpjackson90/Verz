@@ -1,5 +1,5 @@
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\webpack.config.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/webpack.config.js
 FNF:0
 FNH:0
 DA:1,1
@@ -13,7 +13,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\server.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/server.js
 FN:22,(anonymous_0)
 FN:23,(anonymous_1)
 FN:32,(anonymous_2)
@@ -22,8 +22,8 @@ FN:51,(anonymous_4)
 FN:66,(anonymous_5)
 FN:72,(anonymous_6)
 FNF:7
-FNH:4
-FNDA:1,(anonymous_0)
+FNH:3
+FNDA:0,(anonymous_0)
 FNDA:0,(anonymous_1)
 FNDA:1,(anonymous_2)
 FNDA:1,(anonymous_3)
@@ -46,7 +46,7 @@ DA:13,1
 DA:15,1
 DA:16,1
 DA:21,1
-DA:22,1
+DA:22,0
 DA:23,0
 DA:25,1
 DA:27,1
@@ -76,7 +76,7 @@ DA:73,0
 DA:74,0
 DA:77,1
 LF:45
-LH:38
+LH:37
 BRDA:33,0,0,0
 BRDA:33,0,1,1
 BRDA:59,1,0,1
@@ -85,7 +85,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\config\dev.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/config/dev.js
 FNF:0
 FNH:0
 DA:1,1
@@ -95,7 +95,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\config\keys.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/config/keys.js
 FNF:0
 FNH:0
 DA:1,1
@@ -113,7 +113,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\middleware\isAuth.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/middleware/isAuth.js
 FNF:0
 FNH:0
 DA:1,1
@@ -125,7 +125,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\middleware\helpers\generateToken.helper.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/middleware/helpers/generateToken.helper.js
 FN:7,(anonymous_0)
 FNF:1
 FNH:0
@@ -142,7 +142,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\middleware\helpers\setUserInfo.helper.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/middleware/helpers/setUserInfo.helper.js
 FN:1,(anonymous_0)
 FNF:1
 FNH:0
@@ -155,7 +155,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\models\Comment.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/models/Comment.js
 FN:23,(anonymous_0)
 FN:26,(anonymous_1)
 FN:32,(anonymous_2)
@@ -186,7 +186,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\models\Post.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/models/Post.js
 FN:68,(anonymous_0)
 FN:71,(anonymous_1)
 FN:77,(anonymous_2)
@@ -269,7 +269,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\models\User.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/models/User.js
 FN:60,save
 FN:65,(anonymous_1)
 FN:69,(anonymous_2)
@@ -398,7 +398,7 @@ BRF:16
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\models\index.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/models/index.js
 FNF:0
 FNH:0
 DA:1,1
@@ -410,7 +410,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\schema\comment_type.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/schema/comment_type.js
 FN:8,(anonymous_0)
 FN:15,(anonymous_1)
 FN:18,(anonymous_2)
@@ -434,7 +434,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\schema\mutations.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/schema/mutations.js
 FN:28,(anonymous_0)
 FN:42,(anonymous_1)
 FN:55,(anonymous_2)
@@ -538,7 +538,7 @@ BRF:12
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\schema\post_type.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/schema/post_type.js
 FN:17,(anonymous_0)
 FN:29,(anonymous_1)
 FN:35,(anonymous_2)
@@ -563,7 +563,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\schema\root_query_type.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/schema/root_query_type.js
 FN:14,(anonymous_0)
 FN:17,(anonymous_1)
 FN:24,(anonymous_2)
@@ -603,7 +603,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\schema\schema.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/schema/schema.js
 FNF:0
 FNH:0
 DA:1,1
@@ -617,7 +617,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\schema\user_type.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/schema/user_type.js
 FN:10,(anonymous_0)
 FN:19,(anonymous_1)
 FN:25,(anonymous_2)
@@ -649,7 +649,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\services\auth.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/services/auth.js
 FN:15,(anonymous_0)
 FN:19,(anonymous_1)
 FN:20,(anonymous_2)
@@ -783,7 +783,7 @@ BRF:22
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\utils\errorConstants.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/utils/errorConstants.js
 FNF:0
 FNH:0
 DA:1,1
@@ -794,7 +794,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\Users\nasha\Documents\code\Dev\Product_Team\Verz\server\utils\errorHandler.js
+SF:/Users/kareemphillip-jackson/Desktop/Startups/Verz/server/utils/errorHandler.js
 FN:3,(anonymous_0)
 FNF:1
 FNH:1

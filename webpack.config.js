@@ -14,7 +14,7 @@ module.exports = {
     rules: [
       {
         use: "babel-loader",
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/
       },
       {
@@ -26,7 +26,7 @@ module.exports = {
         use: [
           {
             loader: "url-loader",
-            options: {limit: 40000}
+            options: { limit: 40000 }
           },
           "image-webpack-loader"
         ]

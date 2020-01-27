@@ -1,2 +1,8 @@
+#Node Modules
 node_modules
+
+#Dev env variables
 dev.js
+
+#Coverage
+coverage

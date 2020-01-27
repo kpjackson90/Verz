@@ -1,3 +1,4 @@
+require('@babel/polyfill');
 const express = require('express');
 const mongoose = require('mongoose');
 require('./models');

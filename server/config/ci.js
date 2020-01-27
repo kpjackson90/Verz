@@ -1,4 +1,4 @@
 module.exports = {
-  MONGO_URI: "mongodb://127.0.0.1:27017/verz_ci",
-  JWT_SECRET: "randomJWTstringwasinsertedherefortesting"
+  MONGO_URI: process.env.MONGO_URI,
+  JWT_SECRET: process.env.JWT_SECRET
 };

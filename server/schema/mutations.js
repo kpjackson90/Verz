@@ -75,7 +75,7 @@ const mutation = new GraphQLObjectType({
         if (!user) {
           throw new Error(errorName.UNAUTHORIZED);
         }
-       
+
         const userPost = {
           title,
           body,
@@ -114,24 +114,6 @@ const mutation = new GraphQLObjectType({
           };
           return await User.favorite(postInfo);
         }
-      }
-    },
-
-    unFavoritePost: {
-      type: PostType,
-      args: {
-        postId: {type: new GraphQLNonNull(GraphQLString)}
-      },
-      async resolve(parentValue, {postId}, {user}) {
-        if (!user) {
-          throw new Error(errorName.UNAUTHORIZED);
-        }
-        const postInfo = {
-          id: postId,
-          userId: user._id
-        };
-
-        return await User.unFavorite(postInfo);
       }
     },
 
@@ -207,6 +189,24 @@ const mutation = new GraphQLObjectType({
           userId: user._id
         };
         return await User.followUser(userInfo);
+      }
+    },
+    unFollowUser: {
+      type: UserType,
+      args: {
+        userId: {type: new GraphQLNonNull(GraphQLID)}
+      },
+      async resolve(parentValue, {userId}, {user}) {
+        if (!user) {
+          throw new Error(errorName.UNAUTHORIZED);
+        }
+
+        const userInfo = {
+          id: userId,
+          userId: user._id
+        };
+
+        return await User.unFollowUser(userInfo);
       }
     }
   }

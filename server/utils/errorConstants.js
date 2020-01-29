@@ -6,6 +6,7 @@ exports.errorName = {
   DUPLICATE_FAVORITE: 'DUPLICATE_FAVORITE',
   MISSING_POST: 'MISSING_POST',
   DUPLICATE_FOLLOWER: 'DUPLICATE_FOLLOWER',
+  NOT_FOLLOWING: 'NOT_FOLLOWING',
   MISSING_USER: 'MISSING_USER'
 };
 
@@ -40,10 +41,14 @@ exports.errorType = {
   },
   DUPLICATE_FOLLOWER: {
     message: 'You are already following this user',
-    statusCode: 422
+    statusCode: 400
   },
   MISSING_USER: {
     message: 'User does not exist',
     statusCode: 404
+  },
+  NOT_FOLLOWING: {
+    message: 'You are not following this user',
+    statusCode: 400
   }
 };

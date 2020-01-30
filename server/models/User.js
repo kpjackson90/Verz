@@ -1,8 +1,8 @@
-const bcrypt = require("bcrypt-nodejs");
-const mongoose = require("mongoose");
-const Post = mongoose.model("post");
+const bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
+const Post = mongoose.model('post');
 const Schema = mongoose.Schema;
-const { errorName } = require("../utils/errorConstants");
+const {errorName} = require('../utils/errorConstants');
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -31,7 +31,7 @@ const UserSchema = new Schema({
   favorites: [
     {
       type: Schema.Types.ObjectId,
-      ref: "post"
+      ref: 'post'
     }
   ],
   location: {
@@ -40,13 +40,13 @@ const UserSchema = new Schema({
   followers: [
     {
       type: Schema.Types.ObjectId,
-      ref: "user"
+      ref: 'user'
     }
   ],
   following: [
     {
       type: Schema.Types.ObjectId,
-      ref: "user"
+      ref: 'user'
     }
   ],
   posts: [
@@ -57,9 +57,9 @@ const UserSchema = new Schema({
   ]
 });
 
-UserSchema.pre("save", function save(next) {
+UserSchema.pre('save', function save(next) {
   const user = this;
-  if (!user.isModified("password")) {
+  if (!user.isModified('password')) {
     return next();
   }
   bcrypt.genSalt(10, (err, salt) => {
@@ -85,57 +85,30 @@ UserSchema.methods.comparePassword = function comparePassword(
   });
 };
 
-UserSchema.statics.favorite = async function({ id, userId }) {
+UserSchema.statics.favorite = async function({id, userId}) {
   try {
     /*Find post in database based on Id
      check if user already favorite post.
      if not then add Post to the front of user array*/
     const [favoritePost, existingUser] = await Promise.all([
-      Post.findOne({ _id: id }),
-      this.findOne({ _id: userId })
+      Post.findOne({_id: id}),
+      this.findOne({_id: userId})
     ]);
 
-    const { favorites } = existingUser;
+    const {favorites} = existingUser;
     const existingFavorite = favorites.indexOf(favoritePost._id);
 
+    /*User already added to favorites. Then remove from favorites*/
     if (existingFavorite >= 0) {
-      throw new Error(errorName.DUPLICATE_FAVORITE);
+      const newFavorites = favorites.filter(user => user != id);
+      await existingUser.updateOne({$set: {favorites: newFavorites}});
+      return favoritePost;
     }
 
     favorites.unshift(favoritePost._id);
-    await existingUser.updateOne({ $set: { favorites } });
+    await existingUser.updateOne({$set: {favorites}});
 
     return favoritePost;
-  } catch (err) {
-    if (err.message === "DUPLICATE_FAVORITE") {
-      throw err;
-    }
-    throw new Error(errorName.MISSING_POST);
-  }
-};
-
-UserSchema.statics.unFavorite = async function({ id, userId }) {
-  try {
-    /**Retrieve post and user. If post is not found, an error is thrown */
-    const [favoritePost, existingUser] = await Promise.all([
-      Post.findOne({ _id: id }),
-      this.findOne({ _id: userId })
-    ]);
-
-    /**get array of favorites. Search and remove this post
-     *  Check length of this array to determine if post was found
-     * Update the database with the current favorites
-     */
-    const { favorites } = existingUser;
-    const initialLength = favorites.length;
-    const newFavorites = favorites.filter(post => post != id);
-    const finalLength = newFavorites.length;
-
-    if (initialLength !== finalLength) {
-      await existingUser.updateOne({ $set: { favorites: newFavorites } });
-      return favoritePost;
-    }
-    throw Error;
   } catch (err) {
     throw new Error(errorName.MISSING_POST);
   }
@@ -143,6 +116,12 @@ UserSchema.statics.unFavorite = async function({ id, userId }) {
 
 UserSchema.statics.followUser = async function({id, userId}) {
   try {
+    /*check to ensure identical user not performing operation
+      error message could be added
+    */
+    if (id == userId) {
+      throw Error;
+    }
     const [existingUser, newFollow] = await Promise.all([
       this.findOne({_id: userId}),
       this.findOne({_id: id})
@@ -150,10 +129,6 @@ UserSchema.statics.followUser = async function({id, userId}) {
 
     const {following} = existingUser;
     const {followers} = newFollow;
-
-    console.log('following', following);
-    console.log('followers', followers);
-
     const alreadyFollowing = following.indexOf(newFollow._id);
 
     if (alreadyFollowing >= 0) {
@@ -174,6 +149,45 @@ UserSchema.statics.followUser = async function({id, userId}) {
     return newFollow;
   } catch (err) {
     if (err.message === 'DUPLICATE_FOLLOWER') {
+      throw err;
+    }
+    throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.unFollowUser = async function({id, userId}) {
+  try {
+    /*check to ensure identical user not performing operation
+      error message could be added*/
+    if (id == userId) {
+      throw Error;
+    }
+    const [existingUser, oldFollow] = await Promise.all([
+      this.findOne({_id: userId}),
+      this.findOne({_id: id})
+    ]);
+
+    const {following} = existingUser;
+    const {followers} = oldFollow;
+
+    const alreadyFollowing = following.indexOf(oldFollow._id);
+
+    if (alreadyFollowing < 0) {
+      throw new Error(errorName.NOT_FOLLOWING);
+    }
+
+    const newFollowing = following.filter(user => user != id);
+
+    const newFollowers = followers.filter(user => user != userId);
+
+    await Promise.all([
+      await existingUser.updateOne({$set: {following: newFollowing}}),
+      await oldFollow.updateOne({$set: {followers: newFollowers}})
+    ]);
+
+    return oldFollow;
+  } catch (err) {
+    if (err.message === 'You are not following this user') {
       throw err;
     }
     throw new Error(errorName.MISSING_USER);

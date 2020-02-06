@@ -114,22 +114,8 @@ PostSchema.statics.getTags = function(id) {
 };
 
 PostSchema.statics.fetchPost = async function(id) {
-  // const [existingPost, sharedPost] = await Promise.all([
-  //   this.find({author: id}),
-  //   this.find({sharedBy: {$in: [id]}})
-  // ]);
-
-  //console.log('user: ', existingUser);
-
-  //const test = await this.find({$or: [{author: id}, {sharedBy: {$in: [id]}}]});
-  const test = await this.find({sharedBy: {$in: [id]}});
-  console.log(test);
-  // return test;
-
-  // existingPost.concat(sharedPost);
-  // const mergedPost = [...existingPost, ...sharedPost];
-  // console.log('merged', mergedPost);
-  // return mergedPost;
+  const existingPost = await this.find({author: id});
+  return existingPost;
 };
 
 PostSchema.statics.addPost = async function({title, body, tags, userId}) {

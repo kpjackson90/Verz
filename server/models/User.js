@@ -19,6 +19,11 @@ const UserSchema = new Schema({
   username: {
     type: String
   },
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user'
+  },
   userImage: {
     type: String
   },
@@ -50,6 +55,12 @@ const UserSchema = new Schema({
     }
   ],
   posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'post'
+    }
+  ],
+  sharedPost: [
     {
       type: Schema.Types.ObjectId,
       ref: 'post'
@@ -217,6 +228,41 @@ UserSchema.statics.findFollowers = async function(id) {
     return followingUsers;
   } catch (err) {
     throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.sharePost = async function({id, userId}) {
+  try {
+    //goes into catch if post missing
+    const [existingUser, existingPost] = await Promise.all([
+      this.findOne({_id: userId}),
+      Post.findOne({_id: id})
+    ]);
+
+    //add post to user array
+    const {sharedPost} = existingUser;
+    const {sharedBy} = existingPost;
+
+    //console.log('Before ', sharedPost);
+    sharedPost.unshift(existingPost._id);
+    sharedBy.unshift(existingUser._id);
+    //console.log('After', sharedPost);
+
+    await Promise.all([
+      existingUser.updateOne({$set: {sharedPost}}),
+      Post.updateOne({$set: {sharedBy}})
+    ]);
+    // console.log(user);
+    // console.log(post);
+
+    // return user;
+
+    //console.log(existingUser);
+    //console.log('Existing User: ', existingUser);
+    return existingUser;
+  } catch (err) {
+    console.log('Inside here');
+    console.log('Error ', err);
   }
 };
 

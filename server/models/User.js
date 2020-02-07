@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt-nodejs');
 const mongoose = require('mongoose');
 const Post = mongoose.model('post');
 const Schema = mongoose.Schema;
-const {errorName} = require('../utils/errorConstants');
+const { errorName } = require('../utils/errorConstants');
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -54,6 +54,11 @@ const UserSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'post'
     }
+  ],
+  notifications: [
+    {
+      type: String
+    }
   ]
 });
 
@@ -85,28 +90,28 @@ UserSchema.methods.comparePassword = function comparePassword(
   });
 };
 
-UserSchema.statics.favorite = async function({id, userId}) {
+UserSchema.statics.favorite = async function({ id, userId }) {
   try {
     /*Find post in database based on Id
      check if user already favorite post.
      if not then add Post to the front of user array*/
     const [favoritePost, existingUser] = await Promise.all([
-      Post.findOne({_id: id}),
-      this.findOne({_id: userId})
+      Post.findOne({ _id: id }),
+      this.findOne({ _id: userId })
     ]);
 
-    const {favorites} = existingUser;
+    const { favorites } = existingUser;
     const existingFavorite = favorites.indexOf(favoritePost._id);
 
     /*User already added to favorites. Then remove from favorites*/
     if (existingFavorite >= 0) {
       const newFavorites = favorites.filter(user => user != id);
-      await existingUser.updateOne({$set: {favorites: newFavorites}});
+      await existingUser.updateOne({ $set: { favorites: newFavorites } });
       return favoritePost;
     }
 
     favorites.unshift(favoritePost._id);
-    await existingUser.updateOne({$set: {favorites}});
+    await existingUser.updateOne({ $set: { favorites } });
 
     return favoritePost;
   } catch (err) {
@@ -114,7 +119,7 @@ UserSchema.statics.favorite = async function({id, userId}) {
   }
 };
 
-UserSchema.statics.followUser = async function({id, userId}) {
+UserSchema.statics.followUser = async function({ id, userId }) {
   try {
     /*check to ensure identical user not performing operation
       error message could be added
@@ -123,12 +128,12 @@ UserSchema.statics.followUser = async function({id, userId}) {
       throw Error;
     }
     const [existingUser, newFollow] = await Promise.all([
-      this.findOne({_id: userId}),
-      this.findOne({_id: id})
+      this.findOne({ _id: userId }),
+      this.findOne({ _id: id })
     ]);
 
-    const {following} = existingUser;
-    const {followers} = newFollow;
+    const { following } = existingUser;
+    const { followers } = newFollow;
     const alreadyFollowing = following.indexOf(newFollow._id);
 
     if (alreadyFollowing >= 0) {
@@ -142,8 +147,8 @@ UserSchema.statics.followUser = async function({id, userId}) {
     followers.unshift(existingUser._id);
 
     await Promise.all([
-      await existingUser.updateOne({$set: {following}}),
-      await newFollow.updateOne({$set: {followers}})
+      await existingUser.updateOne({ $set: { following } }),
+      await newFollow.updateOne({ $set: { followers } })
     ]);
 
     return newFollow;
@@ -155,7 +160,7 @@ UserSchema.statics.followUser = async function({id, userId}) {
   }
 };
 
-UserSchema.statics.unFollowUser = async function({id, userId}) {
+UserSchema.statics.unFollowUser = async function({ id, userId }) {
   try {
     /*check to ensure identical user not performing operation
       error message could be added*/
@@ -163,12 +168,12 @@ UserSchema.statics.unFollowUser = async function({id, userId}) {
       throw Error;
     }
     const [existingUser, oldFollow] = await Promise.all([
-      this.findOne({_id: userId}),
-      this.findOne({_id: id})
+      this.findOne({ _id: userId }),
+      this.findOne({ _id: id })
     ]);
 
-    const {following} = existingUser;
-    const {followers} = oldFollow;
+    const { following } = existingUser;
+    const { followers } = oldFollow;
 
     const alreadyFollowing = following.indexOf(oldFollow._id);
 
@@ -181,8 +186,8 @@ UserSchema.statics.unFollowUser = async function({id, userId}) {
     const newFollowers = followers.filter(user => user != userId);
 
     await Promise.all([
-      await existingUser.updateOne({$set: {following: newFollowing}}),
-      await oldFollow.updateOne({$set: {followers: newFollowers}})
+      await existingUser.updateOne({ $set: { following: newFollowing } }),
+      await oldFollow.updateOne({ $set: { followers: newFollowers } })
     ]);
 
     return oldFollow;
@@ -196,9 +201,9 @@ UserSchema.statics.unFollowUser = async function({id, userId}) {
 
 UserSchema.statics.findFollowing = async function(id) {
   try {
-    const {following} = await this.findOne({_id: id});
+    const { following } = await this.findOne({ _id: id });
     const followedUsers = await Promise.all(
-      following.map(user => this.findOne({_id: user}))
+      following.map(user => this.findOne({ _id: user }))
     );
 
     return followedUsers;
@@ -209,9 +214,9 @@ UserSchema.statics.findFollowing = async function(id) {
 
 UserSchema.statics.findFollowers = async function(id) {
   try {
-    const {followers} = await this.findOne({_id: id});
+    const { followers } = await this.findOne({ _id: id });
     const followingUsers = await Promise.all(
-      followers.map(user => this.findOne({_id: user}))
+      followers.map(user => this.findOne({ _id: user }))
     );
 
     return followingUsers;

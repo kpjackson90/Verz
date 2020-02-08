@@ -8,6 +8,7 @@ const User = mongoose.model('user');
 const Post = mongoose.model('post');
 const Comment = mongoose.model('comment');
 const {errorName} = require('../utils/errorConstants');
+const {isValid} = require('../middleware/helpers/isValid.helper');
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -35,11 +36,10 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       async resolve(parentValue, args, {user}) {
-        if (!user) {
+        if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
-        } else {
-          return await User.findById(user._id);
         }
+        return await User.findById(user._id);
       }
     }
   })

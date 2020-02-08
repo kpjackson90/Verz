@@ -84,9 +84,10 @@ function createUser({email, password, req}) {
         if (err) {
           throw new Error(err);
         }
+        const {id, role} = user;
         const userInfo = setUserInfo(user);
         const token = 'Bearer ' + (await generateToken(userInfo));
-        return resolve({id: user.id, email, token});
+        return resolve({id, email, role, token});
       });
     } catch (err) {
       return reject(err);

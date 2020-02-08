@@ -60,6 +60,12 @@ const PostSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'comment'
       }
+    ],
+    sharedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+      }
     ]
   },
   {timestamps: true}

@@ -203,7 +203,7 @@ UserSchema.statics.findFollowing = async function(id) {
   try {
     const {following} = await this.findOne({_id: id});
     const followedUsers = await Promise.all(
-      following.map(user => this.findOne({_id: user}))
+      following.map(async user => await this.findOne({_id: user}))
     );
 
     return followedUsers;
@@ -216,12 +216,36 @@ UserSchema.statics.findFollowers = async function(id) {
   try {
     const {followers} = await this.findOne({_id: id});
     const followingUsers = await Promise.all(
-      followers.map(user => this.findOne({_id: user}))
+      followers.map(async user => await this.findOne({_id: user}))
     );
 
     return followingUsers;
   } catch (err) {
     throw new Error(errorName.MISSING_USER);
+  }
+};
+
+UserSchema.statics.sharePost = async function({id, userId}) {
+  try {
+    const [existingUser, existingPost] = await Promise.all([
+      this.findOne({_id: userId}),
+      Post.findOne({_id: id})
+    ]);
+
+    const {posts} = existingUser;
+    const {sharedBy} = existingPost;
+
+    posts.unshift(id);
+    sharedBy.unshift(userId);
+
+    await Promise.all([
+      existingUser.updateOne({$set: {posts}}),
+      existingPost.updateOne({$set: {sharedBy}})
+    ]);
+
+    return existingUser;
+  } catch (err) {
+    //comeback to handle errors
   }
 };
 

@@ -114,8 +114,20 @@ PostSchema.statics.getTags = function(id) {
 };
 
 PostSchema.statics.fetchPost = async function(id) {
-  const existingPost = await this.find({author: id});
-  return existingPost;
+  try {
+    const User = mongoose.model('user');
+    const existingUser = await User.findOne({_id: id});
+    const {posts} = existingUser;
+
+    const existingPost = await Promise.all(
+      posts.map(async post_id => await this.findOne({_id: post_id}))
+    );
+
+    return existingPost;
+  } catch (err) {
+    //comeback to do proper errors.
+    return err;
+  }
 };
 
 PostSchema.statics.addPost = async function({title, body, tags, userId}) {

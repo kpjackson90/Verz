@@ -114,8 +114,19 @@ PostSchema.statics.getTags = function(id) {
 };
 
 PostSchema.statics.fetchPost = async function(id) {
-  const existingPost = await this.find({author: id});
-  return existingPost;
+  try {
+    const User = mongoose.model('user');
+    const existingUser = await User.findOne({_id: id});
+    const {posts} = existingUser;
+
+    const existingPost = await Promise.all(
+      posts.map(async post_id => await this.findOne({_id: post_id}))
+    );
+
+    return existingPost;
+  } catch (err) {
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
+  }
 };
 
 PostSchema.statics.addPost = async function({title, body, tags, userId}) {
@@ -132,7 +143,7 @@ PostSchema.statics.addPost = async function({title, body, tags, userId}) {
 
     return newPost;
   } catch (err) {
-    //handle error
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
@@ -143,7 +154,7 @@ PostSchema.statics.findAuthor = async function(id) {
     const user = await User.findOne({_id: author});
     return user;
   } catch (err) {
-    throw new Error(errorName.MISSING_USER);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 

@@ -125,8 +125,7 @@ PostSchema.statics.fetchPost = async function(id) {
 
     return existingPost;
   } catch (err) {
-    //comeback to do proper errors.
-    return err;
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
@@ -144,7 +143,7 @@ PostSchema.statics.addPost = async function({title, body, tags, userId}) {
 
     return newPost;
   } catch (err) {
-    //handle error
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
@@ -155,7 +154,7 @@ PostSchema.statics.findAuthor = async function(id) {
     const user = await User.findOne({_id: author});
     return user;
   } catch (err) {
-    throw new Error(errorName.MISSING_USER);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 

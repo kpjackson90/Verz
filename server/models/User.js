@@ -115,18 +115,12 @@ UserSchema.statics.favorite = async function({id, userId}) {
 
     return favoritePost;
   } catch (err) {
-    throw new Error(errorName.MISSING_POST);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
 UserSchema.statics.followUser = async function({id, userId}) {
   try {
-    /*check to ensure identical user not performing operation
-      error message could be added
-    */
-    if (id == userId) {
-      throw Error;
-    }
     const [existingUser, newFollow] = await Promise.all([
       this.findOne({_id: userId}),
       this.findOne({_id: id})
@@ -156,17 +150,12 @@ UserSchema.statics.followUser = async function({id, userId}) {
     if (err.message === 'DUPLICATE_FOLLOWER') {
       throw err;
     }
-    throw new Error(errorName.MISSING_USER);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
 UserSchema.statics.unFollowUser = async function({id, userId}) {
   try {
-    /*check to ensure identical user not performing operation
-      error message could be added*/
-    if (id == userId) {
-      throw Error;
-    }
     const [existingUser, oldFollow] = await Promise.all([
       this.findOne({_id: userId}),
       this.findOne({_id: id})
@@ -195,7 +184,7 @@ UserSchema.statics.unFollowUser = async function({id, userId}) {
     if (err.message === 'You are not following this user') {
       throw err;
     }
-    throw new Error(errorName.MISSING_USER);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
@@ -208,7 +197,7 @@ UserSchema.statics.findFollowing = async function(id) {
 
     return followedUsers;
   } catch (err) {
-    throw new Error(errorName.MISSING_USER);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
@@ -221,7 +210,7 @@ UserSchema.statics.findFollowers = async function(id) {
 
     return followingUsers;
   } catch (err) {
-    throw new Error(errorName.MISSING_USER);
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 
@@ -245,7 +234,7 @@ UserSchema.statics.sharePost = async function({id, userId}) {
 
     return existingUser;
   } catch (err) {
-    //comeback to handle errors
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };
 

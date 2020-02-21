@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const {errorName} = require('../utils/errorConstants');
-const {Schema} = mongoose;
+const { errorName } = require('../utils/errorConstants');
+const { Schema } = mongoose;
 
 //Review these
 // var uniqueValidator = require('mongoose-unique-validator');
@@ -68,7 +68,7 @@ const PostSchema = new Schema(
       }
     ]
   },
-  {timestamps: true}
+  { timestamps: true }
 );
 
 PostSchema.statics.snap = function(id) {
@@ -93,7 +93,7 @@ PostSchema.statics.addComment = function(id, content) {
   const Comment = mongoose.model('comment');
 
   return this.findById(id).then(post => {
-    const comment = new Comment({content, post});
+    const comment = new Comment({ content, post });
     post.comments.push(comment);
     return Promise.all([comment.save(), post.save()]).then(
       ([comment, post]) => post
@@ -116,11 +116,11 @@ PostSchema.statics.getTags = function(id) {
 PostSchema.statics.fetchPost = async function(id) {
   try {
     const User = mongoose.model('user');
-    const existingUser = await User.findOne({_id: id});
-    const {posts} = existingUser;
+    const existingUser = await User.findOne({ _id: id });
+    const { posts } = existingUser;
 
     const existingPost = await Promise.all(
-      posts.map(async post_id => await this.findOne({_id: post_id}))
+      posts.map(async post_id => await this.findOne({ _id: post_id }))
     );
 
     return existingPost;
@@ -129,17 +129,17 @@ PostSchema.statics.fetchPost = async function(id) {
   }
 };
 
-PostSchema.statics.addPost = async function({title, body, tags, userId}) {
+PostSchema.statics.addPost = async function({ title, body, tags, userId }) {
   try {
     const User = mongoose.model('user');
     const [newPost, existingUser] = await Promise.all([
-      this.create({title, body, tags, author: userId}),
-      User.findOne({_id: userId})
+      this.create({ title, body, tags, author: userId }),
+      User.findOne({ _id: userId })
     ]);
 
-    const {posts} = existingUser;
+    const { posts } = existingUser;
     posts.unshift(newPost._id);
-    await existingUser.updateOne({$set: {posts}});
+    await existingUser.updateOne({ $set: { posts } });
 
     return newPost;
   } catch (err) {
@@ -150,8 +150,8 @@ PostSchema.statics.addPost = async function({title, body, tags, userId}) {
 PostSchema.statics.findAuthor = async function(id) {
   try {
     const User = mongoose.model('user');
-    const {author} = await this.findById(id);
-    const user = await User.findOne({_id: author});
+    const { author } = await this.findById(id);
+    const user = await User.findOne({ _id: author });
     return user;
   } catch (err) {
     throw new Error(errorName.RESOURCE_NOT_FOUND);

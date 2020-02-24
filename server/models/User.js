@@ -62,7 +62,8 @@ const UserSchema = new Schema({
   ],
   notifications: [
     {
-      type: String
+      type: Schema.Types.ObjectId,
+      ref: 'notification'
     }
   ]
 });
@@ -243,25 +244,36 @@ UserSchema.statics.sharePost = async function({ id, userId }) {
   }
 };
 
-UserSchema.statics.notify = async function(action, title, user) {
+UserSchema.statics.notify = async function(type, user) {
   try {
-    const [currentUser, currentAction] = await Promise.all([
-      this.findById({ _id: user._id }),
-      Post.findOne({ title })
-    ]);
+    const Notification = mongoose.model('notification');
+    const sender = await this.findById({ _id: user._id });
 
-    const { notifications } = currentUser;
+    const receivers = await this.find({ _id: sender.followers });
+    const message = 'this is a message';
 
-    notifications.unshift('new notification');
+    const notify = await Notification.create({
+      type,
+      sender,
+      receivers,
+      message
+    });
 
-    await currentUser.updateOne({ $set: { notifications } });
+    receivers.map(async item => {
+      item.notifications = item.notifications.unshift(notify._id);
+      await item.updateOne({ $set: { notifications: item.notifications } });
+    });
 
-    return currentUser;
+    return receivers;
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
 };
 
-UserSchema.statics.getNotifications = async function(id) {};
+UserSchema.statics.getNotifications = async function(id) {
+  return this.findById(id)
+    .populate('notifications')
+    .then(user => user.notifications);
+};
 
 mongoose.model('user', UserSchema);

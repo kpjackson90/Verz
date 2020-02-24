@@ -42,7 +42,7 @@ const UserType = new GraphQLObjectType({
     notifications: {
       type: new GraphQLList(GraphQLString),
       async resolve({ id }) {
-        return await User.notify(id);
+        return await User.getNotifications(id);
       }
     }
   })

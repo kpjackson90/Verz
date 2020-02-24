@@ -4,9 +4,11 @@ const { GraphQLObjectType, GraphQLList, GraphQLID, GraphQLNonNull } = graphql;
 const PostType = require('./post_type');
 const CommentType = require('./comment_type');
 const UserType = require('./user_type');
+const NotificationType = require('./notification_type');
 const User = mongoose.model('user');
 const Post = mongoose.model('post');
 const Comment = mongoose.model('comment');
+const Notification = mongoose.model('notification');
 const { errorName } = require('../utils/errorConstants');
 const { isValid } = require('../middleware/helpers/isValid.helper');
 
@@ -36,6 +38,12 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parentValue, { id }) {
         return Comment.findById(id);
+      }
+    },
+    notifications: {
+      type: NotificationType,
+      resolve(parentValue, { id }) {
+        return Notification.find({});
       }
     },
     user: {

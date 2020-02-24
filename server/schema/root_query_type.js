@@ -41,9 +41,10 @@ const RootQuery = new GraphQLObjectType({
       }
     },
     notifications: {
-      type: NotificationType,
-      resolve(parentValue, { id }) {
-        return Notification.find({});
+      type: new GraphQLList(NotificationType),
+      async resolve(parentValue, args, { user }) {
+        const owner = await User.findById(user._id);
+        return Notification.find({ receivers: owner.following });
       }
     },
     user: {

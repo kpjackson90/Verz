@@ -20,4 +20,22 @@ const NotificationSchema = new Schema({
   }
 });
 
+NotificationSchema.statics.getNotifications = async function(id) {
+  try {
+    const User = mongoose.model('user');
+    const currentUser = await User.findById({ _id: id });
+    const { notifications } = currentUser;
+
+    const existingNotification = await Promise.all(
+      notifications.map(
+        async notification_id => await this.findOne({ _id: notification_id })
+      )
+    );
+
+    return existingNotification;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 mongoose.model('notification', NotificationSchema);

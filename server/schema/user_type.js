@@ -3,7 +3,9 @@ const graphql = require('graphql');
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
 const User = mongoose.model('user');
 const Post = mongoose.model('post');
+const Notification = mongoose.model('notification');
 const PostType = require('./post_type');
+const NotificationType = require('./notification_type');
 
 const UserType = new GraphQLObjectType({
   name: 'UserType',
@@ -40,9 +42,9 @@ const UserType = new GraphQLObjectType({
       }
     },
     notifications: {
-      type: new GraphQLList(GraphQLString),
+      type: new GraphQLList(NotificationType),
       async resolve({ id }) {
-        return await User.getNotifications(id);
+        return await Notification.getNotifications(id);
       }
     }
   })

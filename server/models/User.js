@@ -260,7 +260,7 @@ UserSchema.statics.notify = async function(type, user) {
     });
 
     receivers.map(async item => {
-      item.notifications = item.notifications.unshift(notify._id);
+      item.notifications.unshift(notify._id);
       await item.updateOne({ $set: { notifications: item.notifications } });
     });
 
@@ -270,10 +270,26 @@ UserSchema.statics.notify = async function(type, user) {
   }
 };
 
-UserSchema.statics.getNotifications = async function(id) {
-  return this.findById(id)
-    .populate('notifications')
-    .then(user => user.notifications);
+UserSchema.statics.findSender = async function(id) {
+  try {
+    const Notification = mongoose.model('notification');
+    const notification = await Notification.findById({ _id: id });
+
+    return notification.sender;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+UserSchema.statics.findReceivers = async function(id) {
+  try {
+    const Notification = mongoose.model('notification');
+    const notification = await Notification.findById({ _id: id });
+
+    return notification.receivers;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 mongoose.model('user', UserSchema);

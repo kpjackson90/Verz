@@ -273,9 +273,10 @@ UserSchema.statics.notify = async function(type, user) {
 UserSchema.statics.findSender = async function(id) {
   try {
     const Notification = mongoose.model('notification');
-    const notification = await Notification.findById({ _id: id });
+    const { notifications } = await this.findById({ _id: id });
 
-    return notification.sender;
+    console.log(notificationSender);
+    //return notificationSender;
   } catch (err) {
     console.log(err);
   }
@@ -286,7 +287,7 @@ UserSchema.statics.findReceivers = async function(id) {
     const Notification = mongoose.model('notification');
     const notification = await Notification.findById({ _id: id });
 
-    return notification.receivers;
+    console.log(notification.receivers);
   } catch (err) {
     console.log(err);
   }

@@ -85,7 +85,7 @@ const mutation = new GraphQLObjectType({
           tags,
           userId: user._id
         };
-        sendNotification('ADD_POST', user);
+        sendNotification('ADDED_POST', user);
         return await Post.addPost(userPost);
       }
     },

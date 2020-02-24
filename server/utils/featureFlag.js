@@ -1,3 +1,4 @@
+//refactor to use Model
 exports.featureFlag = ({ features }, feature) => {
   if (features.includes(feature)) {
     const index = features.indexOf(features);

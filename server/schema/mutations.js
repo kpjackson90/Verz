@@ -14,8 +14,9 @@ const PostType = require('./post_type');
 const UserType = require('./user_type');
 const CommentType = require('./comment_type');
 const AuthService = require('../services/auth');
-const {errorName} = require('../utils/errorConstants');
-const {isValid} = require('../middleware/helpers/isValid.helper');
+const { errorName } = require('../utils/errorConstants');
+const { isValid } = require('../middleware/helpers/isValid.helper');
+const { sendNotification } = require('../utils/notificationHandler');
 
 const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -23,13 +24,13 @@ const mutation = new GraphQLObjectType({
     createUser: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
-        password: {type: GraphQLString},
-        role: {type: GraphQLString}
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+        role: { type: GraphQLString }
       },
-      async resolve(parentValue, {email, password}, {req}) {
+      async resolve(parentValue, { email, password }, { req }) {
         try {
-          return await AuthService.createUser({email, password, req});
+          return await AuthService.createUser({ email, password, req });
         } catch (err) {
           return err;
         }
@@ -38,12 +39,12 @@ const mutation = new GraphQLObjectType({
     login: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
-        password: {type: GraphQLString}
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
       },
-      async resolve(parentValue, {email, password}, {req}) {
+      async resolve(parentValue, { email, password }, { req }) {
         try {
-          return await AuthService.login({email, password, req});
+          return await AuthService.login({ email, password, req });
         } catch (err) {
           return err;
         }
@@ -52,16 +53,16 @@ const mutation = new GraphQLObjectType({
     verify: {
       type: UserType,
       args: {
-        token: {type: GraphQLString}
+        token: { type: GraphQLString }
       },
-      resolve(parentValue, {token}, req) {
-        return AuthService.verifyToken({token, req});
+      resolve(parentValue, { token }, req) {
+        return AuthService.verifyToken({ token, req });
       }
     },
     logout: {
       type: UserType,
       resolve(parentValue, args, req) {
-        const {user} = req;
+        const { user } = req;
         req.logout();
         return user;
       }
@@ -69,11 +70,11 @@ const mutation = new GraphQLObjectType({
     addPost: {
       type: PostType,
       args: {
-        title: {type: GraphQLString},
-        body: {type: GraphQLString},
-        tags: {type: GraphQLList(GraphQLString)}
+        title: { type: GraphQLString },
+        body: { type: GraphQLString },
+        tags: { type: GraphQLList(GraphQLString) }
       },
-      async resolve(parentValue, {title, body, tags}, {user}) {
+      async resolve(parentValue, { title, body, tags }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }
@@ -84,16 +85,17 @@ const mutation = new GraphQLObjectType({
           tags,
           userId: user._id
         };
+        sendNotification('ADDED_POST', user);
         return await Post.addPost(userPost);
       }
     },
     addCommentToPost: {
       type: PostType,
       args: {
-        content: {type: GraphQLString},
-        postId: {type: GraphQLID}
+        content: { type: GraphQLString },
+        postId: { type: GraphQLID }
       },
-      resolve(parentValue, {content, postId}, context) {
+      resolve(parentValue, { content, postId }, context) {
         if (!context.user) {
           throw new Error(errorName.UNAUTHORIZED);
         } else {
@@ -104,9 +106,9 @@ const mutation = new GraphQLObjectType({
     favoritePost: {
       type: PostType,
       args: {
-        postId: {type: GraphQLID}
+        postId: { type: GraphQLID }
       },
-      async resolve(parentValue, {postId}, {user}) {
+      async resolve(parentValue, { postId }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }
@@ -121,66 +123,66 @@ const mutation = new GraphQLObjectType({
     addUserInfo: {
       type: UserType,
       args: {
-        username: {type: GraphQLString},
-        bio: {type: GraphQLString},
-        location: {type: GraphQLString}
+        username: { type: GraphQLString },
+        bio: { type: GraphQLString },
+        location: { type: GraphQLString }
       },
-      resolve(parentValue, {username, bio, location}, context) {
+      resolve(parentValue, { username, bio, location }, context) {
         if (!context.user) {
           throw new Error(errorName.UNAUTHORIZED);
         } else {
-          return new User({username, bio, location}).save();
+          return new User({ username, bio, location }).save();
         }
       }
     },
     deleteUser: {
       type: UserType,
-      args: {id: {type: GraphQLID}},
-      resolve(parentValue, {id}) {
-        return User.remove({_id: id});
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
+        return User.remove({ _id: id });
       }
     },
     snapPost: {
       type: PostType,
-      args: {id: {type: GraphQLID}},
-      resolve(parentValue, {id}) {
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
         return Post.snap(id);
       }
     },
     unsnapPost: {
       type: PostType,
-      args: {id: {type: GraphQLID}},
-      resolve(parentValue, {id}) {
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
         return Post.unsnap(id);
       }
     },
     snapComment: {
       type: CommentType,
-      args: {id: {type: GraphQLID}},
-      resolve(parentValue, {id}) {
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
         return Comment.snap(id);
       }
     },
     unsnapComment: {
       type: CommentType,
-      args: {id: {type: GraphQLID}},
-      resolve(parentValue, {id}) {
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
         return Comment.unsnap(id);
       }
     },
     deletePost: {
       type: PostType,
-      args: {id: {type: GraphQLID}},
-      resolve(parentValue, {id}) {
-        return Post.remove({_id: id});
+      args: { id: { type: GraphQLID } },
+      resolve(parentValue, { id }) {
+        return Post.remove({ _id: id });
       }
     },
     followUser: {
       type: UserType,
       args: {
-        userId: {type: new GraphQLNonNull(GraphQLID)}
+        userId: { type: new GraphQLNonNull(GraphQLID) }
       },
-      async resolve(parentValue, {userId}, {user}) {
+      async resolve(parentValue, { userId }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }
@@ -195,9 +197,9 @@ const mutation = new GraphQLObjectType({
     unFollowUser: {
       type: UserType,
       args: {
-        userId: {type: new GraphQLNonNull(GraphQLID)}
+        userId: { type: new GraphQLNonNull(GraphQLID) }
       },
-      async resolve(parentValue, {userId}, {user}) {
+      async resolve(parentValue, { userId }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }
@@ -212,8 +214,8 @@ const mutation = new GraphQLObjectType({
     },
     sharePost: {
       type: UserType,
-      args: {postId: {type: new GraphQLNonNull(GraphQLID)}},
-      async resolve(parentValue, {postId}, {user}) {
+      args: { postId: { type: new GraphQLNonNull(GraphQLID) } },
+      async resolve(parentValue, { postId }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }

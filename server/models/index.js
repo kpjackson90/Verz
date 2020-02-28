@@ -1,3 +1,3 @@
-require("./Post");
-require("./Comment");
-require("./User");
+require('./Post');
+require('./Comment');
+require('./User');

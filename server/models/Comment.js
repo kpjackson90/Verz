@@ -1,10 +1,13 @@
-const mongoose = require("mongoose");
+/* eslint-disable no-plusplus */
+/* eslint-disable func-names */
+const mongoose = require('mongoose');
+
 const { Schema } = mongoose;
 
 const CommentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "user"
+    ref: 'user'
   },
   content: {
     type: String,
@@ -20,22 +23,22 @@ const CommentSchema = new Schema({
   }
 });
 
-CommentSchema.statics.snap = function(id) {
-  const Comment = mongoose.model("comment");
+// eslint-disable-next-line func-names
+CommentSchema.statics.snap = async function(id) {
+  const Comment = mongoose.model('comment');
 
-  return Comment.findById(id).then(comment => {
-    ++comment.snaps;
-    return comment.save();
-  });
+  const comment = await Comment.findById(id);
+  // eslint-disable-next-line no-plusplus
+  ++comment.snaps;
+  return comment.save();
 };
 
-CommentSchema.statics.unsnap = function(id) {
-  const Comment = mongoose.model("comment");
+CommentSchema.statics.unsnap = async function(id) {
+  const Comment = mongoose.model('comment');
 
-  return Comment.findById(id).then(comment => {
-    ++comment.unsnaps;
-    return comment.save();
-  });
+  const comment = await Comment.findById(id);
+  ++comment.unsnaps;
+  return comment.save();
 };
 
-mongoose.model("comment", CommentSchema);
+mongoose.model('comment', CommentSchema);

@@ -1,10 +1,12 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-return-await */
+/* eslint-disable no-shadow */
+/* eslint-disable no-plusplus */
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const { errorName } = require('../utils/errorConstants');
-const { Schema } = mongoose;
 
-//Review these
-// var uniqueValidator = require('mongoose-unique-validator');
-// var slug = require('slug');
+const { Schema } = mongoose;
 
 const PostSchema = new Schema(
   {
@@ -27,7 +29,6 @@ const PostSchema = new Schema(
     image: {
       type: String
     },
-    //Decide if to remove this data object
     date: {
       type: Date,
       default: Date.now()
@@ -40,7 +41,6 @@ const PostSchema = new Schema(
       type: Number,
       default: 0
     },
-    //Look into this
     favorites_count: {
       type: Number,
       default: 0
@@ -71,13 +71,12 @@ const PostSchema = new Schema(
   { timestamps: true }
 );
 
-PostSchema.statics.snap = function(id) {
+PostSchema.statics.snap = async function(id) {
   const Post = mongoose.model('post');
 
-  return Post.findById(id).then(post => {
-    ++post.snaps;
-    return post.save();
-  });
+  const post = await Post.findById(id);
+  ++post.snaps;
+  return post.save();
 };
 
 PostSchema.statics.unsnap = function(id) {
@@ -95,9 +94,7 @@ PostSchema.statics.addComment = function(id, content) {
   return this.findById(id).then(post => {
     const comment = new Comment({ content, post });
     post.comments.push(comment);
-    return Promise.all([comment.save(), post.save()]).then(
-      ([comment, post]) => post
-    );
+    return Promise.all([comment.save(), post.save()]).then(([, post]) => post);
   });
 };
 
@@ -120,7 +117,7 @@ PostSchema.statics.fetchPost = async function(id) {
     const { posts } = existingUser;
 
     const existingPost = await Promise.all(
-      posts.map(async post_id => await this.findOne({ _id: post_id }))
+      posts.map(async postId => await this.findOne({ _id: postId }))
     );
 
     return existingPost;

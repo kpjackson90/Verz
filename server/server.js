@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+// eslint-disable-next-line import/no-extraneous-dependencies
 require('@babel/polyfill');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,10 +8,10 @@ const expressGraphQL = require('express-graphql');
 const cors = require('cors');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const path = require('path');
 const keys = require('./config/keys');
 const schema = require('./schema/schema');
-const path = require('path');
-const {auth} = require('./middleware/isAuth');
+const { auth } = require('./middleware/isAuth');
 const getErrorCode = require('./utils/errorHandler');
 
 mongoose.Promise = global.Promise;
@@ -19,6 +21,7 @@ mongoose.connect(keys.MONGO_URI, {
   useUnifiedTopology: true
 });
 mongoose.connection
+  // look into logging system to remove console.logs
   .once('open', () => console.log('Connected to MongoLab instance.'))
   .on('error', error => console.log('Error connecting to MongoLab:', error));
 
@@ -30,7 +33,7 @@ app.use(passport.session());
 app.use(cors());
 
 app.use((req, res, next) => {
-  if (req.headers['authorization']) {
+  if (req.headers.authorization) {
     return next();
   }
   return next('route');
@@ -50,8 +53,8 @@ app.use('/graphql', (req, res) => {
 
     customFormatErrorFn: err => {
       console.log('Server Error: ', err.message);
-      const {message, statusCode} = getErrorCode(err);
-      return {message, statusCode};
+      const { message, statusCode } = getErrorCode(err);
+      return { message, statusCode };
     }
   })(req, res);
 });
@@ -68,7 +71,7 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-//this may be temporary
+// this may be temporary
 app.use((err, req, res, next) => {
   console.log(err);
   next();

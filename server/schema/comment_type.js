@@ -1,20 +1,22 @@
-const mongoose = require("mongoose");
-const graphql = require("graphql");
+const mongoose = require('mongoose');
+const graphql = require('graphql');
+
 const { GraphQLObjectType, GraphQLID, GraphQLInt, GraphQLString } = graphql;
-const Comment = mongoose.model("comment");
+const Comment = mongoose.model('comment');
 
 const CommentType = new GraphQLObjectType({
-  name: "CommentType",
+  name: 'CommentType',
   fields: () => ({
     id: { type: GraphQLID },
     snaps: { type: GraphQLInt },
     unsnaps: { type: GraphQLInt },
     content: { type: GraphQLString },
     post: {
-      type: require("./post_type"),
+      // eslint-disable-next-line global-require
+      type: require('./post_type'),
       resolve(parentValue) {
         return Comment.findById(parentValue)
-          .populate("post")
+          .populate('post')
           .then(comment => {
             return comment.post;
           });

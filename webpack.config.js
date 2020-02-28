@@ -1,34 +1,34 @@
-process.traceDeprecation = true; /*This was used to trace deprecations*/
-var webpack = require("webpack");
-var HtmlWebpackPlugin = require("html-webpack-plugin");
-var path = require("path");
+process.traceDeprecation = true; /*This was used to trace deprecations */
+require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
-  entry: "./client/index.js",
+  entry: './client/index.js',
   output: {
-    path: path.resolve(__dirname, "build/"),
-    publicPath: "/",
-    filename: "bundle.js"
+    path: path.resolve(__dirname, 'build/'),
+    publicPath: '/',
+    filename: 'bundle.js'
   },
   module: {
     rules: [
       {
-        use: "babel-loader",
+        use: 'babel-loader',
         test: /\.(js|jsx)$/,
         exclude: /node_modules/
       },
       {
-        use: ["style-loader", "css-loader"],
+        use: ['style-loader', 'css-loader'],
         test: /\.css$/
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/,
         use: [
           {
-            loader: "url-loader",
+            loader: 'url-loader',
             options: { limit: 40000 }
           },
-          "image-webpack-loader"
+          'image-webpack-loader'
         ]
       }
     ]
@@ -36,7 +36,7 @@ module.exports = {
   devServer: {
     historyApiFallback: true
   },
-  mode: "production",
+  mode: 'production',
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
@@ -44,7 +44,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "client/index.html"
+      template: 'client/index.html'
     })
   ]
 };

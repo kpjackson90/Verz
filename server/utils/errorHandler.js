@@ -1,6 +1,6 @@
-const {errorType} = require('./errorConstants');
+const { errorType } = require('./errorConstants');
 
-const getErrorCode = ({message}) => {
+const getErrorCode = ({ message }) => {
   return errorType[message];
 };
 

@@ -3,7 +3,7 @@ const graphql = require('graphql');
 
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLInt } = graphql;
 
-const CommentType = require('./comment_type').default;
+const CommentType = require('./comment_type');
 
 const Post = mongoose.model('post');
 

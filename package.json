@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "NODE_ENV=development nodemon index.js --ignore client",
+    "dev": " SET NODE_ENV=development&& nodemon index.js --ignore client",
     "clean": "rimraf build",
     "build": "npm run clean && webpack",
     "serve": "webpack-dev-server --port $PORT --host 0.0.0.0",

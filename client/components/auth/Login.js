@@ -6,7 +6,8 @@ import { graphql } from "react-apollo";
 import query from "../../queries/CurrentUser";
 import history from "../../history";
 
-export default function Login() {
+
+const Login = () => {
   const client = useApolloClient();
   const [login, { loading, error }] = useMutation(LoginUser, {
     onCompleted({ login }) {
@@ -19,4 +20,6 @@ export default function Login() {
   if (error) return <p>An error occured</p>;
 
   return <AuthForm login={login} />;
-}
+};
+
+export default Login;

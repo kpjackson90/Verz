@@ -1,3 +1,5 @@
+
+
 import React, { Component } from "react";
 import { AUTH_TOKEN } from "../../constants";
 
@@ -15,31 +17,35 @@ class AuthForm extends Component {
   }
 
   render() {
-    return (
-      <div className="container">
-        <div className="row">
+    return ( 
+      <div className="login-bg">
+        <div className="login-box">
+          <h3>Welcome Back!</h3>
+          <p>Sign in here</p>
           <form onSubmit={this.onSubmit.bind(this)}>
-            <div className="input-field  pt-top-10">
+            <div className="input-field">
               <input
-                className="form-control"
-                placeholder="Email"
+                className="form-control login-input"
+                placeholder="Enter Email"
                 value={this.state.email}
                 onChange={e => this.setState({ email: e.target.value })}
               />
             </div>
-            <div className="input-field  pt-top-10">
+            <div className="input-field">
               <input
-                placeholder="Password"
+                placeholder="Enter Password"
                 type="password"
-                className="form-control"
+                className="form-control login-input"
                 value={this.state.password}
                 onChange={e => this.setState({ password: e.target.value })}
               />
+              <a href='#'>Forgot your password?</a>
             </div>
-            <div className="pt-top-10">
-              <button className="btn btn-primary btn-sm btn-block">
-                Submit
+            <div className="submit-section">
+              <button className="btn btn-login">
+                Sign In
               </button>
+            <a href="" >Not a member? Sign up here!</a>
             </div>
           </form>
         </div>

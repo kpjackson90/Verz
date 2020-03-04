@@ -1,0 +1,222 @@
+/** NavBar **/
+
+.logo{
+ margin-left: 48.41px;
+}
+
+.navbar
+{
+    height: 82px;
+    padding: 0px;
+}
+
+.nav-text{
+    font-family: 'Quicksand';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.62);
+}
+
+.nav-btn{
+    background: #081B26;
+    color: white;
+    font-family: 'Quicksand';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+
+    width: 105px;
+    height: 36px;
+    background: #081B26;
+    border-radius: 2px;
+
+    margin: 0px 51px 0px 32px;
+}
+
+.nav-btn:hover{
+    background: rgba(245, 181, 57, 0.93);
+    color: white;
+}
+
+.nav-text{
+    margin-left: 24px;
+    margin-right: 0px;
+    padding: 0px;
+    color: rgba(0, 0, 0, 0.62);
+}
+
+.nav-text:hover {
+    color: black;
+}
+
+.nav-icon{
+    width: 33px;
+    height: 33px;
+    margin-bottom: 27;
+}
+
+
+
+/**Home**/
+
+.header{
+    height: 626px;
+    background: url('../assets/header-img.svg') 100% 100% no-repeat;
+}
+
+.header-text{
+    float:left;
+    width: 455px;
+    height: 357px;
+    margin: 95px 0px 174px 57px;
+    padding: 33px 17px 0px 25px;
+}
+
+.header-text h3{
+    font-family: Josefin Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 24px;
+    margin-bottom:36px;
+}
+
+.header-text p{
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    margin:0px;
+}
+
+.page-btn{
+    background: #F5B539;
+    color: white;
+    font-family: Josefin Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 18px;
+
+    border-radius: 2px;
+    width: 127px;
+    height: 34px;
+
+    margin-top: 39px;
+}
+
+.page-btn:hover{
+    background-color:#081B26;
+    color: white;
+}
+
+.home-category{
+  margin-left:51px;  
+  margin-top:26px;
+}
+
+.home-category a {
+    text-decoration: none;
+    color: black;
+    margin-right: 54.28px;
+    font-family: Architects Daughter;
+
+    font-size: 18px;
+    line-height: 25px;
+}
+
+
+
+/**Login**/
+
+
+.btn-login{
+    width: 233px;
+    height: 27px;
+    color:white;
+    background: #F5B539;
+    border-radius: 0;
+    padding: 0px;
+
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    margin-top:37px;
+}
+
+.btn-login{
+    color: white;
+}
+
+.login-input{
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 0px;
+
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    background-image: none !important;
+    padding: 32.5px 0px 10px 0px;
+}
+
+::placeholder{
+    color: #D0CDE1 !important;
+}
+
+.login-bg{
+    background-image: url('../assets/login-background.svg');
+    height: 610px;
+    padding-top:127px;
+}
+
+.login-box{
+    background-color: white;
+    margin:auto;
+    padding: 46px 130px 106px 130px;
+    width: 493px;
+    height: 435px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+.login-box h3{
+    text-align: center;
+    font-family: Quicksand;
+    font-size: 24px;
+    margin-bottom: 9px;
+}
+
+.login-box p{
+    text-align: center;
+    font-family: Quicksand;
+    font-size: 14px;
+    margin-bottom: 64px;
+}
+
+.login-box a{
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 7px;
+    color: #C4C4C4;
+    margin-top:2px;
+}
+
+.bt-login-cont{
+    display:block;
+}
+
+
+.submit-section{
+    display:block;
+}
+
+
+

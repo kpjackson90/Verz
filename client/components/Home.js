@@ -1,7 +1,6 @@
 import React from 'react';
 import Discover from './Discover';
 import { Link } from "react-router-dom";
-import header from '../assets/header-img.svg';
 
 const Home = () => {
   return (

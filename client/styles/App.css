@@ -60,11 +60,12 @@
 
 
 
-/**Home**/
+/**Home**/ 
 
 .header{
     height: 626px;
     background: url('../assets/header-img.svg') 100% 100% no-repeat;
+    
 }
 
 .header-text{
@@ -130,7 +131,6 @@
 }
 
 
-
 /**Login**/
 
 
@@ -149,7 +149,7 @@
     margin-top:37px;
 }
 
-.btn-login{
+.btn-login:hover{
     color: white;
 }
 
@@ -167,45 +167,53 @@
     padding: 32.5px 0px 10px 0px;
 }
 
+.login-input:focus{
+    box-shadow: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 ::placeholder{
     color: #D0CDE1 !important;
 }
 
 .login-bg{
-    background-image: url('../assets/login-background.svg');
-    height: 610px;
+    background: url('../assets/login-background.svg');
     padding-top:127px;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .login-box{
     background-color: white;
     margin:auto;
     padding: 46px 130px 106px 130px;
-    width: 493px;
-    height: 435px;
+    width: 500px;
+    height: 442px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
 }
 
 .login-box h3{
     text-align: center;
     font-family: Quicksand;
-    font-size: 24px;
+    font-size: 30px;
     margin-bottom: 9px;
 }
 
 .login-box p{
     text-align: center;
     font-family: Quicksand;
-    font-size: 14px;
-    margin-bottom: 64px;
+    font-size: 20px;
+
 }
 
 .login-box a{
     font-family: Quicksand;
     font-style: normal;
     font-weight: 500;
-    font-size: 7px;
-    color: #C4C4C4;
+    font-size: 10px;
+    color: rgb(7, 102, 180);
     margin-top:2px;
 }
 

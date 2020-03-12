@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import AuthForm from "./AuthForm";
-import { graphql } from "react-apollo";
-import mutation from "../../mutations/Signup";
-import query from "../../queries/CurrentUser";
-import history from "../../history";
+import React, { Component } from 'react';
+import AuthForm from './AuthForm';
+import { graphql } from 'react-apollo';
+import mutation from '../../mutations/Signup';
+import query from '../../queries/CurrentUser';
+import history from '../../history';
 
 class Signup extends Component {
   constructor(props) {
@@ -31,19 +31,13 @@ class Signup extends Component {
         this.setState({ errors });
       });
 
-    history.push("/");
+    history.push('/');
   }
 
   render() {
     return (
       <div>
-        <div className="col-md-6 offset-md-4 pt-top-100">
-          <h4>Join The Largest Network of Creatives</h4>
-        </div>
-        <AuthForm
-          errors={this.state.errors}
-          onSubmit={this.onSubmit.bind(this)}
-        />
+        <AuthForm errors={this.state.errors} onSubmit={this.onSubmit.bind(this)} />
       </div>
     );
   }

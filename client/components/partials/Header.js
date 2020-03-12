@@ -1,34 +1,36 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import history from "../../history";
+import logo from "../../assets/Verz.svg";
+import search from "../../assets/ei_search.svg";
 
-class Header extends Component {
-  render() {
+
+
+const Header = () => {
     return (
-      <nav className="navbar navbar-light bg-light">
-        <a className="navbar-brand" href="/">
-          Verz
-          <span className="navbar-text">
-            <h6>Lyrical Intent</h6>
-          </span>
-        </a>
-
-        <form className="form-inline">
-          <Link to="/discover" className="nav-link">
-            Discover
+        <nav className="navbar bg-white border-bottom">
+          <Link className="navbar-brand" to="/">
+            <img className="logo" src={logo} />
           </Link>
+  
+          <form className="form-inline">
+          <Link to="/discover" className="nav-link nav-text">
+              <img className="nav-icon" src={search}/>
+            </Link>
 
-          <Link className="btn btn-sm btn-outline-secondary" to="/login">
-            Login
-          </Link>
-
-          <Link className="btn btn-sm btn-outline-secondary" to="/signup">
-            Signup
-          </Link>
-        </form>
-      </nav>
-    );
-  }
+            <Link to="/discover" className="nav-link nav-text">
+              Discover
+            </Link>
+  
+            <Link className="nav-text nav-link" to="/login">
+              Login
+            </Link>
+  
+            <Link className="btn nav-btn" to="/signup">
+              Sign Up
+            </Link>
+          </form>
+        </nav>
+      );
 }
-
 export default Header;

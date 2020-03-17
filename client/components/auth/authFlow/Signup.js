@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import SignupForm from './authFlow/SignupForm';
+import SignupForm from './SignupForm';
 import { graphql } from 'react-apollo';
-import mutation from '../../mutations/Signup';
-import query from '../../queries/CurrentUser';
-import history from '../../history';
+import mutation from '../../../mutations/Signup';
+import query from '../../../queries/CurrentUser';
+import history from '../../../history';
 
 class Signup extends Component {
   constructor(props) {

@@ -108,6 +108,7 @@
     height: 34px;
 
     margin-top: 39px;
+    padding-top: 9px;
 }
 
 .page-btn:hover{
@@ -228,3 +229,78 @@
 
 
 
+
+/*Authentication flow*/
+
+/*Sign up*/
+
+.signup-block{
+    width: 427px;
+    height: 289px;
+    padding: 31px 82px;
+    float:right;
+    margin-right: 90px;
+    margin-top: 112.5px;
+}
+
+.signup-block h3{
+    font-family: Architects Daughter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    color:black;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.signup-block p{
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    text-align: center;
+    color: black;
+    margin-top:0px;
+    margin-bottom: 70px;
+}
+
+.btn-signup{
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color:white;
+
+    width: 92px;
+    height: 27px;
+    background: #F5B539;
+    border-radius: 3px;
+    padding: 3px 21px;
+    margin: 32px 85px;
+}
+
+.btn-signup:hover{
+    color:white;
+}
+
+.nav-text2{
+    font-family: 'Quicksand';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.62);
+    margin-right: 70px;
+}
+
+.signup-block ::placeholder{
+    text-align: center;
+}
+
+.signup-img{
+    float:left;
+    margin-top:129.5px;
+    margin-left: 54px;
+    width: 620px;
+    height: 299px;
+}

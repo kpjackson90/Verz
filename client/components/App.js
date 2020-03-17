@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import "../styles/App.css"
 
 import Login from "./auth/Login";
-import Signup from "./auth/Signup";
+import Signup from "./auth/authFlow/Signup";
 import Home from "./Home";
 import Discover from "./Discover";
 
@@ -18,9 +18,9 @@ const App = () => {
           <Route  path="/login" component={Login}></Route>
           <Route  path="/signup" component={Signup}></Route>
           <Route  path="/discover" component={Discover}></Route>
-        </Switch>
+        </Switch>  
       </div>
   )
 }
-
+ 
 export default App;

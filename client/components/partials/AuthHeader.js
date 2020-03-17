@@ -3,19 +3,21 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/Verz.svg";
 import search from "../../assets/ei_search.svg";
 import nav from './Nav';
-import MainHeader from './MainHeader';
-import AuthHeader from './AuthHeader';
 
-const Header = () => {
-  const [authflow, setAuthFlow] = useState(false);
-  console.log(authflow);
+const AuthHeader = () => {
 
-    return (
-      {
-        authflow === false ? <MainHeader/> : <AuthHeader/> 
-      }
-    );
-
+    return( 
+      <nav className="navbar bg-white">
+        <Link className="navbar-brand" to="/">
+          <img className="logo" src={logo} />
+        </Link> 
+        <form className="form-inline">
+          <Link className="nav-text2 nav-link" to="/login">
+            Login
+          </Link>
+        </form>
+      </nav>
+    )
 
    //create a boolean called authFlow and set it to false
    //keep in header
@@ -24,4 +26,4 @@ const Header = () => {
 
 }
 
-export default Header;
+export default AuthHeader;

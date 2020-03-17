@@ -1,42 +1,35 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/Verz.svg";
-import search from "../../assets/ei_search.svg";
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../../assets/Verz.svg';
+import search from '../../assets/ei_search.svg';
 import nav from './Nav';
 
-const MainHeader = () => {
-    return(
-      <nav className="navbar bg-white border-bottom">
-      <Link className="navbar-brand" to="/" >
-        <img className="logo" src={logo} />
+const MainHeader = ({ setAuthFlow }) => {
+  return (
+    <nav className='navbar bg-white border-bottom'>
+      <Link className='navbar-brand' to='/' onClick={() => setAuthFlow(false)}>
+        <img className='logo' src={logo} alt='logo' />
       </Link>
-   
-      <form className="form-inline">
-        <Link to="/discover" className="nav-link nav-text">
-          <img className="nav-icon" src={search}/>
+      <form className='form-inline'>
+        <Link to='/discover' className='nav-link nav-text'>
+          <img className='nav-icon' src={search} alt='search' />
         </Link>
-   
-        <Link to="/discover" className="nav-link nav-text">
+
+        <Link to='/discover' className='nav-link nav-text'>
           Discover
         </Link>
-   
-        <Link className="nav-text nav-link" to="/login">
+
+        <Link className='nav-text nav-link' to='/login' onClick={() => setAuthFlow(false)}>
           Login
         </Link>
-   
-        <Link className="btn nav-btn" to="/signup">
+
+        <Link className='btn nav-btn' to='/signup' onClick={() => setAuthFlow(true)}>
           Sign Up
         </Link>
       </form>
     </nav>
-    )
-
-
-   //create a boolean called authFlow and set it to false
-   //keep in header
-   //when user clicks sign up, set authFlow to true
-   //Once you are in auth flow then hide the nav items that you don't need 
-
-}
+  );
+};
 
 export default MainHeader;

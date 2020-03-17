@@ -1,29 +1,24 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/Verz.svg";
-import search from "../../assets/ei_search.svg";
-import nav from './Nav';
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../../assets/Verz.svg';
 
-const AuthHeader = () => {
+const AuthHeader = ({ setAuthFlow }) => {
+  return (
+    <>
+      <nav className='navbar bg-white border-bottom'>
+        <Link className='navbar-brand' to='/' onClick={() => setAuthFlow(false)}>
+          <img className='logo' src={logo} alt='img' />
+        </Link>
 
-    return( 
-      <nav className="navbar bg-white">
-        <Link className="navbar-brand" to="/">
-          <img className="logo" src={logo} />
-        </Link> 
-        <form className="form-inline">
-          <Link className="nav-text2 nav-link" to="/login">
-            Login
-          </Link>
-        </form>
+        <Link className='nav-text nav-link' to='/login' onClick={() => setAuthFlow(true)}>
+          Login
+        </Link>
       </nav>
-    )
-
-   //create a boolean called authFlow and set it to false
-   //keep in header
-   //when user clicks sign up, set authFlow to true
-   //Once you are in auth flow then hide the nav items that you don't need 
-
-}
+    </>
+  );
+};
 
 export default AuthHeader;

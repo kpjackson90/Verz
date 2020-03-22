@@ -1,11 +1,7 @@
 import React from "react";
-import AuthForm from "./AuthForm";
+import LoginForm from "./LoginForm";
 import LoginUser from "../../mutations/Login";
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
-import { graphql } from "react-apollo";
-import query from "../../queries/CurrentUser";
-import history from "../../history";
-
 
 const Login = () => {
   const client = useApolloClient();
@@ -19,7 +15,7 @@ const Login = () => {
   if (loading) return <Loading />;
   if (error) return <p>An error occured</p>;
 
-  return <AuthForm login={login} />;
+  return <LoginForm login={login} />;
 };
 
 export default Login;

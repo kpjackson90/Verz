@@ -27,9 +27,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "NODE_ENV=development nodemon index.js --ignore client",
+    "dev:all": "npm run serve && npm run dev",
     "clean": "rimraf build",
     "build": "npm run clean && webpack",
-    "serve": "webpack-dev-server --port $PORT --host 0.0.0.0",
+    "serve": "webpack-dev-server --port 3000 --host 0.0.0.0",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
     "test": "jest --coverage --forceExit --detectOpenHandles",
     "test:watch": "jest --watch --coverage --detectOpenHandles"
@@ -37,6 +38,7 @@
   "author": "Kareem Phillip-Jackson",
   "license": "ISC",
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.3",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
     "apollo-link": "^1.2.13",
@@ -78,9 +80,7 @@
     "style-loader": "^1.0.0",
     "url-loader": "^2.1.0",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^2.11.5"
+    "webpack-dev-middleware": "^3.7.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",
@@ -102,6 +102,8 @@
     "jest-cli": "^25.1.0",
     "mongodb-memory-server": "^6.2.3",
     "prettier": "^1.19.1",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }

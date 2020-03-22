@@ -14,7 +14,7 @@ const Home = () => {
             eius architecto provident libero sit illum temporibus, magnam dolore! 
             Tempora laborum reprehenderit voluptates dolore.
           </p>
-          <Link className="btn page-btn" to="/login">
+          <Link className="btn page-btn" to="/signup">
             Sign Up
           </Link>
       </div>

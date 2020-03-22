@@ -1,36 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import history from "../../history";
-import logo from "../../assets/Verz.svg";
-import search from "../../assets/ei_search.svg";
-
-
+/* eslint-disable react/jsx-filename-extension */
+import React, { useState } from 'react';
+import MainHeader from './MainHeader';
+import AuthHeader from './AuthHeader';
 
 const Header = () => {
-    return (
-        <nav className="navbar bg-white border-bottom">
-          <Link className="navbar-brand" to="/">
-            <img className="logo" src={logo} />
-          </Link>
-  
-          <form className="form-inline">
-          <Link to="/discover" className="nav-link nav-text">
-              <img className="nav-icon" src={search}/>
-            </Link>
+  const [authFlow, setAuthFlow] = useState(false);
 
-            <Link to="/discover" className="nav-link nav-text">
-              Discover
-            </Link>
-  
-            <Link className="nav-text nav-link" to="/login">
-              Login
-            </Link>
-  
-            <Link className="btn nav-btn" to="/signup">
-              Sign Up
-            </Link>
-          </form>
-        </nav>
-      );
-}
+  return (
+    <div>
+      {authFlow === false ? (
+        <MainHeader setAuthFlow={setAuthFlow} />
+      ) : (
+        <AuthHeader setAuthFlow={setAuthFlow} />
+      )}
+    </div>
+  );
+};
+
 export default Header;

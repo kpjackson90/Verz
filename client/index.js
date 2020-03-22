@@ -1,44 +1,44 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloProvider, useQuery } from "@apollo/react-hooks";
-import { createHttpLink } from "apollo-link-http";
-import { onError } from "apollo-link-error";
-import { ApolloLink } from "apollo-link";
-import { setContext } from "apollo-link-context";
-import { Router } from "react-router-dom";
-import history from "./history";
-import { resolvers, typeDefs } from "./resolvers";
-import gql from "graphql-tag";
-import requireAuth from "./components/auth/requireAuth";
-import { AUTH_TOKEN } from "./constants";
-import "./styles/style.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { createHttpLink } from 'apollo-link-http';
+import { onError } from 'apollo-link-error';
+import { ApolloLink } from 'apollo-link';
+import { setContext } from 'apollo-link-context';
+import { Router, BrowserRouter } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { resolvers, typeDefs } from './resolvers';
+import gql from 'graphql-tag';
+import requireAuth from './components/auth/requireAuth';
+import { AUTH_TOKEN } from './constants';
+import './styles/style.css';
 
-import App from "./components/App";
-import Home from "./components/Home";
-import Login from "./components/auth/Login";
+import App from './components/App';
+import Home from './components/Home';
+import Login from './components/auth/Login';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    console.log("graphQLErrors", graphQLErrors);
+    console.log('graphQLErrors', graphQLErrors);
   }
   if (networkError) {
-    console.log("networkError", networkError);
+    console.log('networkError', networkError);
   }
 });
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql"
+  uri: 'http://localhost:4000/graphql'
 });
 
 const authMiddleware = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : ""
+      authorization: token ? `Bearer ${token}` : ''
     }
   };
 });
@@ -56,7 +56,7 @@ const client = new ApolloClient({
 
 cache.writeData({
   data: {
-    isLoggedIn: !!localStorage.getItem("token")
+    isLoggedIn: !!localStorage.getItem('token')
   }
 });
 
@@ -71,6 +71,8 @@ const IsLoggedIn = () => {
   return data.isLoggedIn ? <Home /> : <Login />;
 };
 
+const history = createBrowserHistory();
+
 const Root = () => {
   return (
     <Router history={history}>
@@ -81,4 +83,4 @@ const Root = () => {
   );
 };
 
-ReactDOM.render(<Root />, document.querySelector("#root"));
+ReactDOM.render(<Root />, document.querySelector('#root'));

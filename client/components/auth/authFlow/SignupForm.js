@@ -1,26 +1,28 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable react/jsx-filename-extension */
 import React, { useState } from 'react';
 import signupimg from '../../../assets/SignUpImage.svg';
+import AuthForm from './AuthForm';
 
 const SignupForm = () => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
 
   return (
     <div>
-      <img className='signup-img' src={signupimg} />
+      <img className='signup-img' src={signupimg} alt='img' />
       <div className='signup-block'>
         <h3>Let's get you signed up!</h3>
         <p>Enter your email to sign up</p>
-        <form>
-          <div className='input-field'>
-            <input
-              className='form-control login-input'
-              placeholder='Enter Email'
-              value={email}
-              onChange={e => setEmail({ email: e.target.value })}
-            />
-          </div>
-          <button className='btn btn-signup'>Next ></button>
-        </form>
+        <AuthForm
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          password2={password2}
+          setPassword2={setPassword2}
+        />
       </div>
     </div>
   );

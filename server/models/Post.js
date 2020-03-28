@@ -5,6 +5,7 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const { errorName } = require('../utils/errorConstants');
+const { uploadImage } = require('../services/image_upload');
 
 const { Schema } = mongoose;
 
@@ -126,11 +127,43 @@ PostSchema.statics.fetchPost = async function(id) {
   }
 };
 
-PostSchema.statics.addPost = async function({ title, body, tags, userId }) {
+PostSchema.statics.addPost = async function({ title, body, imagePost, tags, userId }) {
   try {
+    let base64;
+    let postParams = {
+      title,
+      body,
+      tags,
+      author: userId
+    };
     const User = mongoose.model('user');
+
+    if (imagePost.trim().length > 0) {
+      const params = {
+        userId,
+        imagePost,
+        type: 'post'
+      };
+      base64 = await uploadImage(params);
+      if (!base64) {
+        throw new Error(errorName.INCORRECT_IMAGE_FORMAT);
+      }
+    }
+
+    if (base64) {
+      postParams = {
+        ...postParams,
+        image: base64.secure_url
+      };
+    } else {
+      postParams = {
+        ...postParams,
+        image: null
+      };
+    }
+
     const [newPost, existingUser] = await Promise.all([
-      this.create({ title, body, tags, author: userId }),
+      this.create(postParams),
       User.findOne({ _id: userId })
     ]);
 
@@ -140,6 +173,9 @@ PostSchema.statics.addPost = async function({ title, body, tags, userId }) {
 
     return newPost;
   } catch (err) {
+    if (err.message === 'INCORRECT_IMAGE_FORMAT') {
+      return err;
+    }
     throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };

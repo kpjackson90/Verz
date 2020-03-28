@@ -6,7 +6,8 @@ exports.errorName = {
   DUPLICATE_FAVORITE: 'DUPLICATE_FAVORITE',
   DUPLICATE_FOLLOWER: 'DUPLICATE_FOLLOWER',
   NOT_FOLLOWING: 'NOT_FOLLOWING',
-  RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND'
+  RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
+  INCORRECT_IMAGE_FORMAT: 'INCORRECT_IMAGE_FORMAT'
 };
 
 exports.errorType = {
@@ -45,5 +46,9 @@ exports.errorType = {
   RESOURCE_NOT_FOUND: {
     message: 'Not Found',
     statusCode: 404
+  },
+  INCORRECT_IMAGE_FORMAT: {
+    message: 'Image format is incorrect',
+    statusCode: 400
   }
 };

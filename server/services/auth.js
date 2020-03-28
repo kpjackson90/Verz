@@ -87,7 +87,6 @@ function createUser({ email, password, req }) {
         throw new Error(errorName.EMAIL_IN_USE);
       }
       await user.save();
-      // console.log('new user', user);
 
       req.logIn(user, async err => {
         if (err) {
@@ -96,7 +95,6 @@ function createUser({ email, password, req }) {
         const { id, role } = user;
         const userInfo = setUserInfo(user);
         const token = `Bearer ${await generateToken(userInfo)}`;
-        console.log('insider here');
         return resolve({ id, email, role, token });
       });
     } catch (err) {

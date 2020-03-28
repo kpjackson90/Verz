@@ -25,8 +25,7 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, password }, { req }) {
         try {
-          //return await AuthService.createUser({ email, password, req });
-          console.log(await AuthService.createUser({ email, password, req }));
+          return await AuthService.createUser({ email, password, req });
         } catch (err) {
           return err;
         }
@@ -68,9 +67,10 @@ const mutation = new GraphQLObjectType({
       args: {
         title: { type: GraphQLString },
         body: { type: GraphQLString },
+        imagePost: { type: GraphQLString },
         tags: { type: GraphQLList(GraphQLString) }
       },
-      async resolve(parentValue, { title, body, tags }, { user }) {
+      async resolve(parentValue, { title, body, imagePost, tags }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }
@@ -78,6 +78,7 @@ const mutation = new GraphQLObjectType({
         const userPost = {
           title,
           body,
+          imagePost,
           tags,
           // eslint-disable-next-line no-underscore-dangle
           userId: user._id

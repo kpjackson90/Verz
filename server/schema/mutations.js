@@ -25,7 +25,8 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { email, password }, { req }) {
         try {
-          return await AuthService.createUser({ email, password, req });
+          //return await AuthService.createUser({ email, password, req });
+          console.log(await AuthService.createUser({ email, password, req }));
         } catch (err) {
           return err;
         }

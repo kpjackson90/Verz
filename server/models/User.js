@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const Post = mongoose.model('post');
 const { Schema } = mongoose;
 const { errorName } = require('../utils/errorConstants');
+const { uploadImage } = require('../services/image_upload');
 
 const UserSchema = new Schema({
   email: {
@@ -38,7 +39,8 @@ const UserSchema = new Schema({
     type: String
   },
   image: {
-    type: String
+    type: String,
+    default: null
   },
   favorites: [
     {
@@ -238,6 +240,34 @@ UserSchema.statics.sharePost = async function({ id, userId }) {
 
     return existingUser;
   } catch (err) {
+    throw new Error(errorName.RESOURCE_NOT_FOUND);
+  }
+};
+
+UserSchema.statics.uploadImage = async function({ userId, userImage }) {
+  try {
+    if (userImage.trim().length <= 0) {
+      throw new Error(errorName.NO_IMAGE);
+    }
+
+    const existingUser = await this.findOne({ _id: userId });
+    const params = {
+      username: existingUser.email,
+      imagePost: userImage,
+      type: 'profile'
+    };
+    const base64 = await uploadImage(params);
+
+    if (!base64) {
+      throw new Error(errorName.INCORRECT_IMAGE_FORMAT);
+    }
+
+    await existingUser.updateOne({ $set: { image: base64.secure_url } });
+    return existingUser;
+  } catch (err) {
+    if (err.message === 'NO_IMAGE') {
+      return err;
+    }
     throw new Error(errorName.RESOURCE_NOT_FOUND);
   }
 };

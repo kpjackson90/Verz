@@ -12,6 +12,7 @@ const PostType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     title: { type: GraphQLString },
+    image: { type: GraphQLString },
     body: { type: GraphQLString },
     snaps: { type: GraphQLInt },
     tags: {

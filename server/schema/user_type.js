@@ -15,6 +15,7 @@ const UserType = new GraphQLObjectType({
     username: { type: GraphQLString },
     role: { type: GraphQLString },
     bio: { type: GraphQLString },
+    image: { type: GraphQLString },
     location: { type: GraphQLString },
     favorites: {
       type: new GraphQLList(PostType),

@@ -7,7 +7,8 @@ exports.errorName = {
   DUPLICATE_FOLLOWER: 'DUPLICATE_FOLLOWER',
   NOT_FOLLOWING: 'NOT_FOLLOWING',
   RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
-  INCORRECT_IMAGE_FORMAT: 'INCORRECT_IMAGE_FORMAT'
+  INCORRECT_IMAGE_FORMAT: 'INCORRECT_IMAGE_FORMAT',
+  NO_IMAGE: 'NO_IMAGE'
 };
 
 exports.errorType = {
@@ -49,6 +50,10 @@ exports.errorType = {
   },
   INCORRECT_IMAGE_FORMAT: {
     message: 'Image format is incorrect',
+    statusCode: 400
+  },
+  NO_IMAGE: {
+    message: 'Image was not provided',
     statusCode: 400
   }
 };

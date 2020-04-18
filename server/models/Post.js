@@ -127,21 +127,24 @@ PostSchema.statics.fetchPost = async function(id) {
   }
 };
 
-PostSchema.statics.addPost = async function({ title, body, imagePost, tags, userId }) {
+PostSchema.statics.addPost = async function({ title, body, postImage, tags, userId }) {
   try {
     let base64;
     let postParams = {
       title,
       body,
       tags,
+      image: null,
       author: userId
     };
-    const User = mongoose.model('user');
 
-    if (imagePost.trim().length > 0) {
+    const User = mongoose.model('user');
+    const existingUser = await User.findOne({ _id: userId });
+
+    if (postImage.trim().length > 0) {
       const params = {
-        userId,
-        imagePost,
+        username: existingUser.email,
+        imagePost: postImage,
         type: 'post'
       };
       base64 = await uploadImage(params);
@@ -155,17 +158,9 @@ PostSchema.statics.addPost = async function({ title, body, imagePost, tags, user
         ...postParams,
         image: base64.secure_url
       };
-    } else {
-      postParams = {
-        ...postParams,
-        image: null
-      };
     }
 
-    const [newPost, existingUser] = await Promise.all([
-      this.create(postParams),
-      User.findOne({ _id: userId })
-    ]);
+    const newPost = await this.create(postParams);
 
     const { posts } = existingUser;
     posts.unshift(newPost._id);

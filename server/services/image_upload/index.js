@@ -10,7 +10,7 @@ cloudinary.config({
   api_secret: CLOUD_API_SECRET
 });
 
-exports.uploadImage = ({ userId, imagePost, type }) => {
+exports.uploadImage = ({ username, imagePost, type }) => {
   return new Promise((resolve, reject) => {
     if (!isBase64(imagePost, { mimeRequired: true })) {
       return resolve(undefined);
@@ -20,13 +20,14 @@ exports.uploadImage = ({ userId, imagePost, type }) => {
       imagePost,
       {
         resource_type: 'image',
-        public_id: `Verz/${type}/${userId}/${moment()}`,
+        public_id: `Verz/${username}/${type}/${moment()}`,
         type: 'private'
       },
       function(error, result) {
         if (error) {
           return reject(error);
         }
+
         return resolve(result);
       }
     );

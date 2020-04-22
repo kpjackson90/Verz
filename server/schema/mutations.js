@@ -67,9 +67,10 @@ const mutation = new GraphQLObjectType({
       args: {
         title: { type: GraphQLString },
         body: { type: GraphQLString },
+        postImage: { type: GraphQLString },
         tags: { type: GraphQLList(GraphQLString) }
       },
-      async resolve(parentValue, { title, body, tags }, { user }) {
+      async resolve(parentValue, { title, body, postImage, tags }, { user }) {
         if (!isValid(user)) {
           throw new Error(errorName.UNAUTHORIZED);
         }
@@ -77,12 +78,17 @@ const mutation = new GraphQLObjectType({
         const userPost = {
           title,
           body,
+          postImage,
           tags,
           // eslint-disable-next-line no-underscore-dangle
           userId: user._id
         };
-        const newPost = await Post.addPost(userPost);
-        return newPost;
+        try {
+          const newPost = await Post.addPost(userPost);
+          return newPost;
+        } catch (err) {
+          return err;
+        }
       }
     },
     addCommentToPost: {
@@ -113,8 +119,13 @@ const mutation = new GraphQLObjectType({
           // eslint-disable-next-line no-underscore-dangle
           userId: user._id
         };
-        const favorite = await User.favorite(postInfo);
-        return favorite;
+
+        try {
+          const favorite = await User.favorite(postInfo);
+          return favorite;
+        } catch (err) {
+          return err;
+        }
       }
     },
 
@@ -190,8 +201,12 @@ const mutation = new GraphQLObjectType({
           // eslint-disable-next-line no-underscore-dangle
           userId: user._id
         };
-        const following = await User.followUser(userInfo);
-        return following;
+        try {
+          const following = await User.followUser(userInfo);
+          return following;
+        } catch (err) {
+          return err;
+        }
       }
     },
     unFollowUser: {
@@ -209,8 +224,12 @@ const mutation = new GraphQLObjectType({
           // eslint-disable-next-line no-underscore-dangle
           userId: user._id
         };
-        const unfollowing = await User.unFollowUser(userInfo);
-        return unfollowing;
+        try {
+          const unfollowing = await User.unFollowUser(userInfo);
+          return unfollowing;
+        } catch (err) {
+          return err;
+        }
       }
     },
     sharePost: {
@@ -225,8 +244,33 @@ const mutation = new GraphQLObjectType({
           // eslint-disable-next-line no-underscore-dangle
           userId: user._id
         };
-        const share = await User.sharePost(postInfo);
-        return share;
+
+        try {
+          const share = await User.sharePost(postInfo);
+          return share;
+        } catch (err) {
+          return err;
+        }
+      }
+    },
+    uploadImage: {
+      type: UserType,
+      args: { userImage: { type: GraphQLString } },
+      async resolve(parentValue, { userImage }, { user }) {
+        if (!isValid(user)) {
+          throw new Error(errorName.UNAUTHORIZED);
+        }
+
+        const imageParams = {
+          // eslint-disable-next-line no-underscore-dangle
+          userId: user._id,
+          userImage
+        };
+        try {
+          return await User.uploadImage(imageParams);
+        } catch (err) {
+          return err;
+        }
       }
     }
   }
